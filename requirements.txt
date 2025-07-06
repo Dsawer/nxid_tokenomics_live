@@ -1,0 +1,9 @@
+# NXID Enhanced Tokenomics - Web Deployment Requirements
+streamlit>=1.33,<1.36
+pandas>=2.2,<2.3
+numpy>=2.0,<2.2
+plotly>=5.19,<6.0
+
+# Optional performance boosters for cloud
+streamlit-option-menu>=0.3.0
+streamlit-aggrid>=0.3.0

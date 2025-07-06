@@ -1,0 +1,86 @@
+{
+  "version": "auto-py-to-exe-configuration_v1",
+  "pyinstallerOptions": [
+    {
+      "optionDest": "noconfirm",
+      "value": true
+    },
+    {
+      "optionDest": "filenames",
+      "value": ["run.py"]
+    },
+    {
+      "optionDest": "onefile",
+      "value": true
+    },
+    {
+      "optionDest": "console",
+      "value": true
+    },
+    {
+      "optionDest": "name",
+      "value": "NXID_Tokenomics"
+    },
+    {
+      "optionDest": "clean_build",
+      "value": true
+    },
+    {
+      "optionDest": "hidden_import",
+      "value": [
+        "streamlit",
+        "streamlit.web.cli",
+        "streamlit.runtime.scriptrunner",
+        "streamlit.runtime.state",
+        "streamlit.components.v1",
+        "pandas",
+        "numpy",
+        "plotly",
+        "plotly.graph_objects",
+        "plotly.express",
+        "plotly.subplots",
+        "click",
+        "altair",
+        "pyarrow",
+        "validators",
+        "watchdog",
+        "blinker",
+        "cachetools",
+        "packaging",
+        "pillow",
+        "protobuf",
+        "rich",
+        "tenacity",
+        "toml",
+        "tornado",
+        "tzlocal"
+      ]
+    },
+    {
+      "optionDest": "add_data",
+      "value": [
+        "main.py;.",
+        "config.py;.",
+        "models.py;.",
+        "visualizations.py;.",
+        "sidebar.py;.",
+        "analytics.py;.",
+        "utils.py;.",
+        "requirements.txt;.",
+        "*.json;."
+      ]
+    },
+    {
+      "optionDest": "collect_submodules",
+      "value": [
+        "streamlit"
+      ]
+    },
+    {
+      "optionDest": "collect_data",
+      "value": [
+        "streamlit"
+      ]
+    }
+  ]
+}

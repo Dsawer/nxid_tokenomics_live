@@ -1019,14 +1019,6 @@ class EnhancedVisualizationManager:
     
     def _create_weekly_daily_interest_tracking(self, weekly_df: pd.DataFrame, presale_df: pd.DataFrame) -> go.Figure:
         """Haftalık tracking - Enhanced """
-        import streamlit as st
-        
-        if 'show_all_weeks' not in st.session_state:
-            st.session_state.show_all_weeks = True
-        if 'single_week_mode' not in st.session_state:
-            st.session_state.single_week_mode = False
-        if 'selected_week' not in st.session_state:
-            st.session_state.selected_week = 1
         
         # Haftalık tracking logic
         daily_tracking_data = []
@@ -1069,16 +1061,9 @@ class EnhancedVisualizationManager:
             
             daily_tracking_data.append(weekly_daily_data)
         
-        # Hafta seçimi ve chart oluşturma logic
-        if st.session_state.single_week_mode and st.session_state.selected_week:
-            weeks_to_show = [w for w in daily_tracking_data if w['week'] == st.session_state.selected_week]
-            title_suffix = f" - Only Week {st.session_state.selected_week} (APY: {weeks_to_show[0]['week_apy']:.1f}%)" if weeks_to_show else ""
-        elif st.session_state.show_all_weeks:
-            weeks_to_show = daily_tracking_data
-            title_suffix = f" - All {len(daily_tracking_data)} Weeks"
-        else:
-            weeks_to_show = daily_tracking_data[:9]
-            title_suffix = f" - First {min(9, len(daily_tracking_data))} Weeks"
+        # Tüm haftaları göster
+        weeks_to_show = daily_tracking_data
+        title_suffix = f" - All {len(daily_tracking_data)} Weeks"
         
         fig = make_subplots(
             rows=2, cols=2,
@@ -1107,17 +1092,16 @@ class EnhancedVisualizationManager:
             color = week_colors[color_idx]
             
             legend_group = f"Week_{week}"
-            show_legend = True if i == 0 else False
             
-            # Charts ekleme
+            # Charts ekleme - Her hafta için legend göster
             fig.add_trace(go.Scatter(
                 x=week_data['days'],
                 y=week_data['daily_interest'],
                 mode='lines',
                 name=f'Week {week} (APY: {week_apy:.1f}%)',
-                line=dict(color=color, width=3 if st.session_state.single_week_mode else 2),
+                line=dict(color=color, width=2),
                 hovertemplate=f'<b>Week {week} (APY: {week_apy:.1f}%)</b><br>Day: %{{x}}<br>Daily Interest: %{{y:,.0f}} NXID<extra></extra>',
-                showlegend=show_legend,
+                showlegend=True,  # Her hafta için legend göster
                 legendgroup=legend_group
             ), row=1, col=1)
             
@@ -1126,9 +1110,9 @@ class EnhancedVisualizationManager:
                 y=week_data['cumulative_interest'],
                 mode='lines',
                 name=f'Week {week} Cumulative',
-                line=dict(color=color, width=3 if st.session_state.single_week_mode else 2),
+                line=dict(color=color, width=2),
                 hovertemplate=f'<b>Week {week} (APY: {week_apy:.1f}%)</b><br>Day: %{{x}}<br>Total Interest: %{{y:,.0f}} NXID<extra></extra>',
-                showlegend=False,
+                showlegend=False,  # Sadece ilk trace'de legend
                 legendgroup=legend_group
             ), row=1, col=2)
             
@@ -1137,7 +1121,7 @@ class EnhancedVisualizationManager:
                 y=week_data['total_balance'],
                 mode='lines',
                 name=f'Week {week} Balance',
-                line=dict(color=color, width=3 if st.session_state.single_week_mode else 2),
+                line=dict(color=color, width=2),
                 hovertemplate=f'<b>Week {week} (APY: {week_apy:.1f}%)</b><br>Day: %{{x}}<br>Total: %{{y:,.0f}} NXID<extra></extra>',
                 showlegend=False,
                 legendgroup=legend_group
@@ -1148,7 +1132,7 @@ class EnhancedVisualizationManager:
                 y=week_data['interest_percentage'],
                 mode='lines',
                 name=f'Week {week} %',
-                line=dict(color=color, width=3 if st.session_state.single_week_mode else 2),
+                line=dict(color=color, width=2),
                 hovertemplate=f'<b>Week {week} (APY: {week_apy:.1f}%)</b><br>Day: %{{x}}<br>Interest: %{{y:.1f}}%<extra></extra>',
                 showlegend=False,
                 legendgroup=legend_group
@@ -1163,28 +1147,24 @@ class EnhancedVisualizationManager:
         
         template_config = self.chart_template.copy()
         
-        if st.session_state.single_week_mode:
-            legend_config = dict(
-                orientation="h",
-                yanchor="top",
-                y=-0.1,
-                xanchor="center",
-                x=0.5,
-                font=dict(color=NXID_COLORS['light'], size=12)
-            )
-        else:
-            legend_config = dict(
-                orientation="v",
-                yanchor="top",
-                y=1,
-                xanchor="left",
-                x=1.02,
-                font=dict(color=NXID_COLORS['light'], size=10)
-            )
+        # Legend konfigürasyonu - scroll edilebilir
+        legend_config = dict(
+            orientation="v",
+            yanchor="top",
+            y=1,
+            xanchor="left",
+            x=1.02,
+            font=dict(color=NXID_COLORS['light'], size=10),
+            bgcolor=f"rgba{hex_to_rgb(NXID_COLORS['dark']) + (0.8,)}",
+            bordercolor=NXID_COLORS['primary'],
+            borderwidth=1,
+            itemsizing="constant",
+            itemwidth=30
+        )
         
         template_config.update({
             'title': dict(
-                text=f'<b>Weekly Simple Interest Tracking  (${self.config.weekly_investment_amount} Fixed Investment){title_suffix}</b>',
+                text=f'<b>Weekly Simple Interest Tracking (${self.config.weekly_investment_amount} Fixed Investment){title_suffix}</b>',
                 x=0.5, font=dict(size=24, color=NXID_COLORS['primary'])
             ),
             'height': 700,

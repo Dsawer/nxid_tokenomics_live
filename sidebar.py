@@ -9,6 +9,7 @@ import json
 import os
 from config import EnhancedNXIDConfig
 from utils import display_nxid_logo, NXID_COLORS
+import pandas as pd
 
 class SidebarManager:
     """Enhanced Sidebar yönetim sınıfı  - Advanced Controls with Examples"""
@@ -101,48 +102,200 @@ class SidebarManager:
             </p>
         </div>
         ''', unsafe_allow_html=True)
-    
+        
     def _render_config_management(self):
-        """Enhanced JSON Config yönetimi """
-        with st.sidebar.expander("Gelişmiş Config Yönetimi ", expanded=False):
-            st.markdown("**Gelişmiş Config Dosya İşlemleri :**")
+        """Enhanced JSON Config yönetimi - Download/Upload"""
+        with st.sidebar.expander("🔧 Gelişmiş Config Yönetimi", expanded=False):
+            st.markdown("**📁 Config Dosya İşlemleri:**")
             
+            # Current config status
+            if 'current_config' in st.session_state:
+                config_status = "✅ Mevcut"
+            else:
+                config_status = "❌ Yok"
+            st.info(f"Mevcut Config: {config_status}")
+            
+            # === DOWNLOAD SECTION ===
+            st.markdown("### 📥 Config İndir")
             col1, col2 = st.columns(2)
+            
             with col1:
-                if st.button("Kaydet ", use_container_width=True, 
-                        help="Tüm gelişmiş özelliklerle birlikte enhanced  yapılandırmasını JSON dosyasına kaydet."):
-                    if 'current_config' in st.session_state:
-                        if st.session_state.current_config.save_to_json():
-                            st.success("Enhanced Config  kaydedildi!")
-                        else:
-                            st.error("Kaydetme hatası!")
-                    else:
-                        st.warning("Önce config oluştur")
+                # JSON Download
+                if 'current_config' in st.session_state:
+                    config_json = json.dumps(
+                        st.session_state.current_config.to_dict(), 
+                        indent=2, 
+                        ensure_ascii=False
+                    )
+                    
+                    st.download_button(
+                        label="📄 JSON İndir",
+                        data=config_json,
+                        file_name=f"nxid_enhanced_config_{pd.Timestamp.now().strftime('%Y%m%d_%H%M')}.json",
+                        mime="application/json",
+                        help="Mevcut konfigürasyonu JSON dosyası olarak bilgisayarına indir",
+                        use_container_width=True
+                    )
+                else:
+                    st.button("📄 JSON İndir", disabled=True, help="Önce config oluşturun", use_container_width=True)
             
             with col2:
-                if st.button("Yükle ", use_container_width=True,
-                        help="Önceden kaydedilmiş enhanced JSON config  dosyasını yükle. Tüm ayarlar geri yüklenecek."):
+                # Backup Download (with timestamp)
+                if 'current_config' in st.session_state:
+                    timestamp = pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')
+                    backup_config = st.session_state.current_config.to_dict()
+                    backup_config['backup_info'] = {
+                        'created_at': timestamp,
+                        'version': '6.0',
+                        'backup_type': 'manual'
+                    }
+                    
+                    backup_json = json.dumps(backup_config, indent=2, ensure_ascii=False)
+                    
+                    st.download_button(
+                        label="💾 Backup İndir",
+                        data=backup_json,
+                        file_name=f"nxid_backup_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.json",
+                        mime="application/json",
+                        help="Timestamp ile backup config indir",
+                        use_container_width=True
+                    )
+                else:
+                    st.button("💾 Backup İndir", disabled=True, use_container_width=True)
+            
+            # === UPLOAD SECTION ===
+            st.markdown("### 📤 Config Yükle")
+            
+            uploaded_file = st.file_uploader(
+                "JSON Config Dosyası Seç",
+                type=['json'],
+                help="Bilgisayarından NXID config JSON dosyası yükle",
+                key="config_uploader"
+            )
+            
+            if uploaded_file is not None:
+                try:
+                    # Read the uploaded file
+                    file_content = uploaded_file.read()
+                    config_data = json.loads(file_content.decode('utf-8'))
+                    
+                    # Show file info
+                    st.info(f"📁 Dosya: `{uploaded_file.name}` ({len(file_content)} bytes)")
+                    
+                    # Check if it's a backup file
+                    if 'backup_info' in config_data:
+                        backup_info = config_data['backup_info']
+                        st.success(f"📅 Backup Dosyası: {backup_info.get('created_at', 'Unknown date')}")
+                        # Remove backup info before loading
+                        config_data.pop('backup_info', None)
+                    
+                    # Validate config
+                    try:
+                        loaded_config = EnhancedNXIDConfig.from_dict(config_data)
+                        
+                        # Show preview
+                        st.markdown("**🔍 Config Önizleme:**")
+                        preview_cols = st.columns(3)
+                        
+                        with preview_cols[0]:
+                            st.metric("Starting McAp", f"${loaded_config.starting_mcap_usdt/1e6:.1f}M")
+                            st.metric("Presale Days", f"{loaded_config.presale_days}")
+                        
+                        with preview_cols[1]:
+                            st.metric("Target McAp", f"${loaded_config.maturity_target_mcap/1e9:.1f}B")
+                            st.metric("Total Supply", f"{loaded_config.total_supply/1e9:.0f}B")
+                        
+                        with preview_cols[2]:
+                            st.metric("Presale %", f"{loaded_config.presale_allocation}%")
+                            st.metric("Team %", f"{loaded_config.team_allocation}%")
+                        
+                        # Load buttons
+                        load_col1, load_col2 = st.columns(2)
+                        
+                        with load_col1:
+                            if st.button("✅ Config'i Yükle", type="primary", use_container_width=True):
+                                st.session_state.current_config = loaded_config
+                                st.success("🎉 Enhanced Config başarıyla yüklendi!")
+                                st.rerun()
+                        
+                        with load_col2:
+                            if st.button("❌ İptal", use_container_width=True):
+                                st.rerun()
+                    
+                    except Exception as validation_error:
+                        st.error(f"❌ Config validation hatası: {validation_error}")
+                        st.warning("Dosya format doğru değil veya versiyon uyumsuz.")
+                        
+                except json.JSONDecodeError as e:
+                    st.error(f"❌ JSON parse hatası: {e}")
+                    st.warning("Dosya geçerli bir JSON dosyası değil.")
+                except Exception as e:
+                    st.error(f"❌ Dosya okuma hatası: {e}")
+            
+            # === LOCAL FILE OPERATIONS (Legacy Support) ===
+            st.markdown("### 💽 Lokal Dosya İşlemleri")
+            st.caption("Sunucu dosya sisteminde işlemler (legacy)")
+            
+            local_col1, local_col2 = st.columns(2)
+            
+            with local_col1:
+                if st.button("💾 Lokal Kaydet", use_container_width=True, 
+                        help="Config'i sunucu dosya sistemine kaydet"):
+                    if 'current_config' in st.session_state:
+                        if st.session_state.current_config.save_to_json():
+                            st.success("✅ Lokal'e kaydedildi!")
+                        else:
+                            st.error("❌ Kaydetme hatası!")
+                    else:
+                        st.warning("⚠️ Önce config oluştur")
+            
+            with local_col2:
+                if st.button("📂 Lokal Yükle", use_container_width=True,
+                        help="Sunucu dosya sisteminden config yükle"):
                     try:
                         loaded_config = EnhancedNXIDConfig.load_from_json()
                         st.session_state.current_config = loaded_config
-                        st.success("Enhanced Config  yüklendi!")
+                        st.success("✅ Lokal'den yüklendi!")
                         st.rerun()
                     except Exception as e:
-                        st.error(f"Yükleme hatası: {e}")
+                        st.error(f"❌ Yükleme hatası: {e}")
                         st.session_state.current_config = EnhancedNXIDConfig()
             
-            # Config file status
-            config_files = ["nxid_config_enhanced_v6.json", "nxid_config_enhanced_v5.json", "nxid_config.json"]
-            config_found = False
+            # === CONFIG STATUS INFO ===
+            st.markdown("### 📊 Config Durumu")
             
+            config_files = [
+                "nxid_enhanced_config_v6.json", 
+                "nxid_enhanced_config_v5.json", 
+                "nxid_config.json"
+            ]
+            
+            config_found = False
             for config_file in config_files:
                 if os.path.exists(config_file):
-                    st.info(f"{config_file} mevcut")
+                    file_size = os.path.getsize(config_file)
+                    st.success(f"📁 {config_file} ({file_size} bytes)")
                     config_found = True
                     break
             
             if not config_found:
-                st.warning("Config dosyası bulunamadı -  varsayılanları kullanılıyor")
+                st.info("📁 Lokal config dosyası bulunamadı")
+            
+            # Show current config summary
+            if 'current_config' in st.session_state:
+                config = st.session_state.current_config
+                
+                st.markdown("**🎯 Mevcut Config Özeti:**")
+                summary_text = f"""
+                - **Starting McAp:** ${config.starting_mcap_usdt/1e6:.1f}M
+                - **Maturity Target:** ${config.maturity_target_mcap/1e9:.1f}B  
+                - **Presale Days:** {config.presale_days}
+                - **Presale Allocation:** {config.presale_allocation}%
+                - **Team Allocation:** {config.team_allocation}%
+                - **Maturity Damping:** {'✅' if config.enable_maturity_damping else '❌'}
+                - **Dynamic APY:** {'✅' if config.dynamic_apy_enabled else '❌'}
+                """
+                st.info(summary_text)
     
     def _render_basic_analysis_settings(self, config: EnhancedNXIDConfig) -> EnhancedNXIDConfig:
         """Temel Analiz Ayarları + Başlangıç McAp """

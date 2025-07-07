@@ -1,7 +1,7 @@
-# NXID Enhanced Tokenomics - Web Deployment Requirements
+# NXID Enhanced Tokenomics - Streamlit Cloud Compatible Requirements
 streamlit>=1.33,<1.36
-pandas>=2.2,<2.3
-numpy>=2.0,<2.2
+pandas>=1.5,<2.3
+numpy>=1.19.3,<2.0
 plotly>=5.19,<6.0
 
 # Optional performance boosters for cloud

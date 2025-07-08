@@ -1,7 +1,7 @@
 """
-NXID Enhanced Utilities Module 
+NXID  Utilities Module 
 ===================================
-Enhanced CSS, Logo, Renkler ve yardımcı fonksiyonlar - Smooth + Maturity + User Gains
+ CSS, Logo, Renkler ve yardımcı fonksiyonlar - Smooth + Maturity + User Gains
 """
 
 import streamlit as st
@@ -9,7 +9,7 @@ import os
 import base64
 from typing import Tuple
 
-# Enhanced NXID Profesyonel Renkler 
+#  NXID Profesyonel Renkler 
 NXID_COLORS = {
     'primary': '#1B8EF2',
     'secondary': '#3effc8', 
@@ -31,7 +31,7 @@ NXID_COLORS = {
     'burn': '#ff4444',
     'tax': '#ff8800',
     
-    # Enhanced  colors
+    #   colors
     'bear': '#ef4444',
     'bull': '#22c55e',
     'base': '#1B8EF2',
@@ -48,47 +48,47 @@ def hex_to_rgb(hex_color: str) -> Tuple[int, int, int]:
     return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
 
 def display_nxid_logo(width: int = 120) -> str:
-    """Enhanced NXID logosu göster """
+    """ NXID logosu göster """
     try:
         # Önce PNG dosyasını dene
         if os.path.exists("nxid-logo.png"):
             with open("nxid-logo.png", "rb") as f:
                 img_data = base64.b64encode(f.read()).decode()
-            return f'<img src="data:image/png;base64,{img_data}" width="{width}" height="{width}" alt="Enhanced NXID Logo " style="border-radius: 50%; box-shadow: 0 0 30px rgba(27, 142, 242, 0.5);">'
+            return f'<img src="data:image/png;base64,{img_data}" width="{width}" height="{width}" alt=" NXID Logo " style="border-radius: 50%; box-shadow: 0 0 30px rgba(27, 142, 242, 0.5);">'
         
         # Sonra SVG dosyasını dene
         elif os.path.exists("NXID-logo.svg"):
             with open("NXID-logo.svg", "r", encoding="utf-8") as f:
                 svg_content = f.read()
             svg_base64 = base64.b64encode(svg_content.encode('utf-8')).decode('utf-8')
-            return f'<img src="data:image/svg+xml;base64,{svg_base64}" width="{width}" height="{width}" alt="Enhanced NXID Logo " style="border-radius: 50%; box-shadow: 0 0 30px rgba(27, 142, 242, 0.5);">'
+            return f'<img src="data:image/svg+xml;base64,{svg_base64}" width="{width}" height="{width}" alt=" NXID Logo " style="border-radius: 50%; box-shadow: 0 0 30px rgba(27, 142, 242, 0.5);">'
         
-        # Dosya yoksa Enhanced SVG fallback 
+        # Dosya yoksa  SVG fallback 
         else:
             svg_content = f'''
             <svg width="{width}" height="{width}" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                    <linearGradient id="enhancedNxidGradientV46" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <linearGradient id="NxidGradientV46" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" style="stop-color:#1B8EF2;stop-opacity:1" />
                         <stop offset="25%" style="stop-color:#7AC3FF;stop-opacity:1" />
                         <stop offset="50%" style="stop-color:#3effc8;stop-opacity:1" />
                         <stop offset="75%" style="stop-color:#14B8A6;stop-opacity:1" />
                         <stop offset="100%" style="stop-color:#8B5CF6;stop-opacity:0.8" />
                     </linearGradient>
-                    <filter id="enhancedGlowV46">
+                    <filter id="GlowV46">
                         <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
                         <feMerge> 
                             <feMergeNode in="coloredBlur"/>
                             <feMergeNode in="SourceGraphic"/>
                         </feMerge>
                     </filter>
-                    <pattern id="enhancedDots" patternUnits="userSpaceOnUse" width="8" height="8">
+                    <pattern id="Dots" patternUnits="userSpaceOnUse" width="8" height="8">
                         <circle cx="4" cy="4" r="1" fill="#3effc8" opacity="0.4"/>
                     </pattern>
                 </defs>
-                <circle cx="60" cy="60" r="55" fill="url(#enhancedNxidGradientV46)" stroke="#1B8EF2" stroke-width="3" filter="url(#enhancedGlowV46)"/>
+                <circle cx="60" cy="60" r="55" fill="url(#NxidGradientV46)" stroke="#1B8EF2" stroke-width="3" filter="url(#GlowV46)"/>
                 <circle cx="60" cy="60" r="45" fill="none" stroke="#3effc8" stroke-width="1" opacity="0.6"/>
-                <circle cx="60" cy="60" r="35" fill="url(#enhancedDots)" opacity="0.4"/>
+                <circle cx="60" cy="60" r="35" fill="url(#Dots)" opacity="0.4"/>
                 <text x="60" y="68" font-family="Orbitron, monospace" font-size="18" font-weight="900" 
                       fill="#0B1426" text-anchor="middle" dominant-baseline="middle">NXID</text>
                 <text x="60" y="85" font-family="Inter, sans-serif" font-size="8" font-weight="600" 
@@ -97,7 +97,7 @@ def display_nxid_logo(width: int = 120) -> str:
             '''
             
             svg_base64 = base64.b64encode(svg_content.encode('utf-8')).decode('utf-8')
-            return f'<img src="data:image/svg+xml;base64,{svg_base64}" width="{width}" height="{width}" alt="Enhanced NXID Logo " style="border-radius: 50%; box-shadow: 0 0 30px rgba(27, 142, 242, 0.5);">'
+            return f'<img src="data:image/svg+xml;base64,{svg_base64}" width="{width}" height="{width}" alt=" NXID Logo " style="border-radius: 50%; box-shadow: 0 0 30px rgba(27, 142, 242, 0.5);">'
             
     except Exception as e:
         # Final CSS fallback 
@@ -106,8 +106,8 @@ def display_nxid_logo(width: int = 120) -> str:
                       <span style="font-family: Inter, sans-serif; font-weight: 600; color: #8B5CF6; font-size: {width//12}px;"></span>
                    </div>'''
 
-def load_enhanced_css():
-    """Enhanced NXID markalaması ile gelişmiş özel CSS yükle """
+def load__css():
+    """ NXID markalaması ile gelişmiş özel CSS yükle """
     primary_rgb = hex_to_rgb(NXID_COLORS['primary'])
     secondary_rgb = hex_to_rgb(NXID_COLORS['secondary'])
     presale_rgb = hex_to_rgb(NXID_COLORS['presale'])
@@ -180,7 +180,7 @@ def load_enhanced_css():
         border-color: {NXID_COLORS['maturity']};
     }}
     
-    /* Enhanced : Phase indicators */
+    /*  : Phase indicators */
     .phase-presale {{
         border-left: 5px solid {NXID_COLORS['presale']} !important;
         background: linear-gradient(145deg, 
@@ -202,7 +202,7 @@ def load_enhanced_css():
             rgba({primary_rgb[0]}, {primary_rgb[1]}, {primary_rgb[2]}, 0.05)) !important;
     }}
     
-    /* Enhanced scenario colors */
+    /*  scenario colors */
     .scenario-bear {{
         border-color: {NXID_COLORS['bear']} !important;
         color: {NXID_COLORS['bear']} !important;
@@ -218,7 +218,7 @@ def load_enhanced_css():
         color: {NXID_COLORS['base']} !important;
     }}
     
-    .enhanced-smooth {{
+    .-smooth {{
         border-color: {NXID_COLORS['smooth']} !important;
         color: {NXID_COLORS['smooth']} !important;
     }}
@@ -247,7 +247,7 @@ def load_enhanced_css():
         background: linear-gradient(135deg, {NXID_COLORS['maturity']}, {NXID_COLORS['secondary']});
     }}
     
-    /* Enhanced  styling */
+    /*   styling */
     .stSelectbox > div > div {{
         background: rgba({primary_rgb[0]}, {primary_rgb[1]}, {primary_rgb[2]}, 0.1);
         border: 1px solid rgba({maturity_rgb[0]}, {maturity_rgb[1]}, {maturity_rgb[2]}, 0.3);
@@ -295,25 +295,25 @@ def load_enhanced_css():
         border-color: {NXID_COLORS['accent']};
     }}
     
-    /* Enhanced expander styling */
+    /*  expander styling */
     .streamlit-expanderHeader {{
         background: rgba({primary_rgb[0]}, {primary_rgb[1]}, {primary_rgb[2]}, 0.1);
         border-radius: 10px;
         border: 1px solid rgba({maturity_rgb[0]}, {maturity_rgb[1]}, {maturity_rgb[2]}, 0.3);
     }}
     
-    /* Enhanced progress bar styling */
+    /*  progress bar styling */
     .stProgress > div > div > div > div {{
         background: linear-gradient(90deg, {NXID_COLORS['primary']}, {NXID_COLORS['maturity']});
     }}
     
-    /* Enhanced checkbox styling */
+    /*  checkbox styling */
     .stCheckbox > label > div {{
         background: rgba({primary_rgb[0]}, {primary_rgb[1]}, {primary_rgb[2]}, 0.1);
         border: 1px solid rgba({maturity_rgb[0]}, {maturity_rgb[1]}, {maturity_rgb[2]}, 0.3);
     }}
     
-    /* Enhanced version badge */
+    /*  version badge */
     .version-badge {{
         position: fixed;
         bottom: 20px;
@@ -329,7 +329,7 @@ def load_enhanced_css():
         box-shadow: 0 4px 15px rgba({maturity_rgb[0]}, {maturity_rgb[1]}, {maturity_rgb[2]}, 0.4);
     }}
     
-    /* Enhanced smooth indicators */
+    /*  smooth indicators */
     .smooth-indicator {{
         background: linear-gradient(90deg, {NXID_COLORS['smooth']}, {NXID_COLORS['teal']});
         border-radius: 10px;
@@ -340,7 +340,7 @@ def load_enhanced_css():
         margin: 2px;
     }}
     
-    /* Enhanced maturity indicators */
+    /*  maturity indicators */
     .maturity-indicator {{
         background: linear-gradient(90deg, {NXID_COLORS['maturity']}, {NXID_COLORS['purple']});
         border-radius: 10px;
@@ -354,7 +354,7 @@ def load_enhanced_css():
     """, unsafe_allow_html=True)
 
 def format_number(num: float, unit: str = "") -> str:
-    """Enhanced sayıları düzgün formatlı şekilde göster """
+    """ sayıları düzgün formatlı şekilde göster """
     if num >= 1e9:
         return f"{num/1e9:.1f}B {unit}".strip()
     elif num >= 1e6:
@@ -365,7 +365,7 @@ def format_number(num: float, unit: str = "") -> str:
         return f"{num:.2f} {unit}".strip()
 
 def create_metric_card(title: str, value: str, subtitle: str = "", color: str = None, phase: str = "") -> str:
-    """Enhanced Metric card HTML oluştur """
+    """ Metric card HTML oluştur """
     if color is None:
         color = NXID_COLORS['primary']
     
@@ -388,7 +388,7 @@ def create_metric_card(title: str, value: str, subtitle: str = "", color: str = 
     """
 
 def create_scenario_badge(scenario: str) -> str:
-    """Enhanced Senaryo badge'i oluştur """
+    """ Senaryo badge'i oluştur """
     scenario_colors = {
         'bear': NXID_COLORS['bear'],
         'bull': NXID_COLORS['bull'],
@@ -416,7 +416,7 @@ def create_scenario_badge(scenario: str) -> str:
     """
 
 def get_chart_template() -> dict:
-    """Enhanced Plotly chart'lar için standart template """
+    """ Plotly chart'lar için standart template """
     return {
         'paper_bgcolor': 'rgba(0,0,0,0)',
         'plot_bgcolor': f"rgba{hex_to_rgb(NXID_COLORS['dark']) + (0.4,)}",
@@ -442,7 +442,7 @@ def get_chart_template() -> dict:
     }
 
 def display_header():
-    """Enhanced Ana sayfa başlığını göster """
+    """ Ana sayfa başlığını göster """
     nxid_logo = display_nxid_logo(120)
     st.markdown(f'''
     <div style="text-align: center; margin-bottom: 3rem;">
@@ -456,7 +456,7 @@ def display_header():
     <h1 style="text-align: center; font-family: Orbitron, monospace; font-size: 3.5rem; font-weight: 900; 
                background: linear-gradient(135deg, {NXID_COLORS['primary']}, {NXID_COLORS['secondary']}, {NXID_COLORS['maturity']}); 
                -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-               margin-bottom: 1rem;">ENHANCED NXID TOKENOMICS </h1>
+               margin-bottom: 1rem;"> NXID TOKENOMICS </h1>
     ''', unsafe_allow_html=True)
     
     st.markdown(f'''
@@ -464,7 +464,7 @@ def display_header():
                 background: rgba({hex_to_rgb(NXID_COLORS['primary'])[0]}, {hex_to_rgb(NXID_COLORS['primary'])[1]}, {hex_to_rgb(NXID_COLORS['primary'])[2]}, 0.1); 
                 border-radius: 15px; border: 1px solid rgba({hex_to_rgb(NXID_COLORS['maturity'])[0]}, {hex_to_rgb(NXID_COLORS['maturity'])[1]}, {hex_to_rgb(NXID_COLORS['maturity'])[2]}, 0.3);">
         <p style="color: {NXID_COLORS['light']}; font-family: Inter; margin: 0; font-size: 1.1rem; font-weight: 500;">
-            <strong style="color: {NXID_COLORS['secondary']};">Enhanced Next Digital ID (NXID)</strong> • 
+            <strong style="color: {NXID_COLORS['secondary']};"> Next Digital ID (NXID)</strong> • 
             <span style="color: {NXID_COLORS['accent']};">BNB Chain (BEP-20)</span> • 
             <strong style="color: {NXID_COLORS['gold']};">100B Toplam Arz</strong>
         </p>
@@ -477,7 +477,7 @@ def display_header():
         <p style="color: {NXID_COLORS['gray']}; font-family: Inter; margin: 0.5rem 0 0 0; font-size: 0.9rem;">
             <span style="color: {NXID_COLORS['bear']};">🐻 Bear</span> / 
             <span style="color: {NXID_COLORS['base']};">📊 Base</span> / 
-            <span style="color: {NXID_COLORS['bull']};">🐂 Bull</span> Enhanced Scenarios
+            <span style="color: {NXID_COLORS['bull']};">🐂 Bull</span>  Scenarios
         </p>
     </div>
     ''', unsafe_allow_html=True)
@@ -485,21 +485,21 @@ def display_header():
     st.markdown(f'''
     <p style="text-align: center; color: {NXID_COLORS['gray']}; font-size: 1.3rem; 
                font-family: Inter; margin-bottom: 2rem; font-weight: 500;">
-        Enhanced Demand Model • Smooth Price Model • Maturity McAp Target • Average User ROI • 
+         Demand Model • Smooth Price Model • Maturity McAp Target • Average User ROI • 
     </p>
     <div style="width: 100%; height: 3px; background: linear-gradient(90deg, {NXID_COLORS['primary']}, {NXID_COLORS['secondary']}, {NXID_COLORS['maturity']}); 
                 margin: 2rem auto; border-radius: 2px;"></div>
     ''', unsafe_allow_html=True)
     
-    # Enhanced version badge
+    #  version badge
     st.markdown(f'''
     <div class="version-badge">
-        Enhanced NXID 
+         NXID 
     </div>
     ''', unsafe_allow_html=True)
 
 def get_phase_color(phase: str) -> str:
-    """Enhanced Phase rengini al """
+    """ Phase rengini al """
     phase_colors = {
         'presale': NXID_COLORS['presale'],
         'mainnet': NXID_COLORS['mainnet'],
@@ -512,7 +512,7 @@ def get_phase_color(phase: str) -> str:
     return phase_colors.get(phase, NXID_COLORS['primary'])
 
 def format_currency(amount: float, currency: str = "USDT") -> str:
-    """Enhanced Para birimini formatla """
+    """ Para birimini formatla """
     if currency == "USDT" or currency == "$":
         if amount >= 1e9:
             return f"${amount/1e9:.1f}B"
@@ -526,27 +526,27 @@ def format_currency(amount: float, currency: str = "USDT") -> str:
         return format_number(amount, currency)
 
 def format_percentage(value: float, decimal_places: int = 1) -> str:
-    """Enhanced Yüzde formatla """
+    """ Yüzde formatla """
     return f"{value:.{decimal_places}f}%"
 
 def format_multiplier(value: float, decimal_places: int = 1) -> str:
-    """Enhanced Çarpan formatla """
+    """ Çarpan formatla """
     return f"{value:.{decimal_places}f}x"
 
 def create_smooth_indicator(value: str, label: str = "Smooth") -> str:
-    """Enhanced Smooth indicator oluştur """
+    """ Smooth indicator oluştur """
     return f'<span class="smooth-indicator">{label}: {value}</span>'
 
 def create_maturity_indicator(value: str, label: str = "Maturity") -> str:
-    """Enhanced Maturity indicator oluştur """
+    """ Maturity indicator oluştur """
     return f'<span class="maturity-indicator">{label}: {value}</span>'
 
-def get_enhanced_colors() -> dict:
-    """Enhanced renk paletini döndür """
+def get__colors() -> dict:
+    """ renk paletini döndür """
     return NXID_COLORS
 
 def calculate_user_roi_summary(investment: float, peak_value: float, final_value: float) -> dict:
-    """Enhanced Kullanıcı ROI özetini hesapla """
+    """ Kullanıcı ROI özetini hesapla """
     peak_roi = peak_value / investment if investment > 0 else 0
     final_roi = final_value / investment if investment > 0 else 0
     sustain_rate = final_roi / peak_roi if peak_roi > 0 else 0

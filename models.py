@@ -1,7 +1,7 @@
 """
-NXID Enhanced Tokenomics Models 
+NXID  Tokenomics Models 
 =====================================
-Enhanced: Simplified Maturity Damping + Dynamic Staking + Real Circulating Supply + Price Velocity
+:  Cyclical Quarters + Simplified Maturity Damping + Dynamic Staking + Real Circulating Supply + Price Velocity
 """
 
 import pandas as pd
@@ -10,14 +10,14 @@ import math
 import random
 import streamlit as st
 from typing import Dict, List, Tuple, Optional
-from config import EnhancedNXIDConfig
+from config import NXIDConfig
 
-class EnhancedTokenomicsModel:
-    """Enhanced NXID Tokenomics Model  - Simplified Maturity + Dynamic Systems"""
+class TokenomicsModel:
+    """ NXID Tokenomics Model  -  Cyclical + Dynamic Systems"""
     
-    def __init__(self, config: EnhancedNXIDConfig):
+    def __init__(self, config: NXIDConfig):
         self.config = config
-        # Enhanced tracking için historiler
+        #  tracking için historiler
         self.price_history = []
         self.mcap_history = []
         self.staking_history = []
@@ -215,7 +215,7 @@ class EnhancedTokenomicsModel:
     
     def simulate_mainnet_phase(self, presale_df: pd.DataFrame, vesting_df: pd.DataFrame, 
                               scenario: str = "base") -> pd.DataFrame:
-        """🚀 ENHANCED MAINNET PHASE  - Simplified Maturity + Dynamic Systems"""
+        """🚀  MAINNET PHASE  -  Cyclical Quarters + Simplified Maturity + Dynamic Systems"""
         np.random.seed(123)
         
         # Presale verileri
@@ -226,18 +226,10 @@ class EnhancedTokenomicsModel:
         # Starting McAp (user input)
         starting_mcap = self.config.starting_mcap_usdt
         
-        # Senaryo çarpanları
-        if scenario == "bear":
-            scenario_multipliers = self.config.bear_scenario_multipliers
-        elif scenario == "bull":
-            scenario_multipliers = self.config.bull_scenario_multipliers
-        else:
-            scenario_multipliers = self.config.base_scenario_multipliers
-        
         projection_days = int(self.config.projection_months * 30.44)
         mainnet_data = []
         
-        # Enhanced parametreler 
+        #  parametreler 
         maturity_params = self.config.get_maturity_params()
         staking_params = self.config.get_staking_params()
         apy_params = self.config.get_apy_params()
@@ -245,7 +237,7 @@ class EnhancedTokenomicsModel:
         # Market staking pool
         market_staking_pool = self.config.total_supply * (self.config.market_staking_pool / 100)
         
-        # Enhanced akümülatörler 
+        #  akümülatörler 
         cumulative_tax_collected = 0
         cumulative_tax_to_staking = 0
         cumulative_tax_burned = 0
@@ -254,7 +246,7 @@ class EnhancedTokenomicsModel:
         distributed_staking_rewards = 0
         previous_price = final_presale_price
         
-        # Enhanced moving averages
+        #  moving averages
         mcap_ma = starting_mcap
         price_ma = final_presale_price
         staking_ma = staking_params['base_rate']
@@ -263,23 +255,17 @@ class EnhancedTokenomicsModel:
         for day in range(projection_days):
             months = day / 30.44
             years = day / 365.25
-            quarter = int(months // 3) % 16
+            quarter = int(months // 3)  # GLOBAL çeyrek numarası (0, 1, 2, 3, 4, 5, ...)
             quarter_year = quarter // 4 + 1
             quarter_in_year = quarter % 4 + 1
             
-            # === SIMPLIFIED MATURITY DAMPING CALCULATION  ===
+            # === 5 YILLIK DÖNGÜSEL ÇEYREK SİSTEMİ  ===
             
-            # 1. Çeyreklik senaryo etkisi
-            if quarter < len(scenario_multipliers):
-                quarter_multiplier = scenario_multipliers[quarter]
-            else:
-                quarter_multiplier = scenario_multipliers[-1]
+            # 1. DÖNGÜSEL Çeyreklik senaryo etkisi - 20 çeyreklik döngü
+            quarter_multiplier = self.config.get_cyclical_multiplier(quarter, scenario)
             
-            # 2. Market beta
-            if quarter < len(self.config.market_beta_per_quarter):
-                current_beta = self.config.market_beta_per_quarter[quarter]
-            else:
-                current_beta = self.config.market_beta_per_quarter[-1]
+            # 2. DÖNGÜSEL Market beta - 20 çeyreklik döngü
+            current_beta = self.config.get_cyclical_beta(quarter)
             
             # 3. SIMPLIFIED MATURITY DAMPING 
             if maturity_params['enabled']:
@@ -333,7 +319,7 @@ class EnhancedTokenomicsModel:
             mcap_ma = mcap_ma * (1 - self.config.mcap_smoothing_factor * 2) + raw_mcap * (self.config.mcap_smoothing_factor * 2)
             current_mcap = mcap_ma
             
-            # === ENHANCED CIRCULATING SUPPLY WITH REAL CALCULATION  ===
+            # ===  CIRCULATING SUPPLY WITH REAL CALCULATION  ===
             month_index = min(len(vesting_df) - 1, int(months))
             if month_index < len(vesting_df):
                 base_circulating = vesting_df.iloc[month_index]['circulating_supply']
@@ -372,12 +358,12 @@ class EnhancedTokenomicsModel:
             # REAL CIRCULATING SUPPLY 
             gross_circulating = max(1, base_circulating - total_burned)
             
-            # === ENHANCED DYNAMIC STAKING SYSTEM  ===
+            # ===  DYNAMIC STAKING SYSTEM  ===
             
             # Price estimation for staking calculations
             current_price_estimate = current_mcap / gross_circulating if gross_circulating > 0 else final_presale_price
             
-            # ENHANCED PRICE VELOCITY CALCULATION 
+            #  PRICE VELOCITY CALCULATION 
             price_velocity = (current_price_estimate - previous_price) / max(previous_price, 0.00001)
             self.price_velocity_history.append(price_velocity)
             
@@ -396,7 +382,7 @@ class EnhancedTokenomicsModel:
             else:
                 self.smoothed_velocity = 0
             
-            # ENHANCED PRICE VELOCITY IMPACT ON STAKING 
+            #  PRICE VELOCITY IMPACT ON STAKING 
             velocity_impact = staking_params['price_velocity_impact']
             velocity_effect = 1 + self.smoothed_velocity * velocity_impact
             velocity_effect = max(0.3, min(2.0, velocity_effect))
@@ -407,7 +393,7 @@ class EnhancedTokenomicsModel:
             target_staking_rate = max(staking_params['min_rate'], 
                                     min(staking_params['max_rate'], target_staking_rate))
             
-            # ENHANCED STAKING MOMENTUM 
+            #  STAKING MOMENTUM 
             momentum = staking_params['momentum']
             staking_momentum = staking_momentum * momentum + target_staking_rate * (1 - momentum)
             
@@ -416,7 +402,7 @@ class EnhancedTokenomicsModel:
             staking_ma = staking_ma * (1 - smoothness) + staking_momentum * smoothness
             smooth_staking_rate = staking_ma
             
-            # ENHANCED STAKING DYNAMICS 
+            #  STAKING DYNAMICS 
             current_staking_ratio = cumulative_staked / gross_circulating if gross_circulating > 0 else 0
             available_for_staking = gross_circulating - cumulative_staked
             
@@ -437,7 +423,7 @@ class EnhancedTokenomicsModel:
             cumulative_staked = max(0, cumulative_staked + daily_new_staking - daily_unstaking)
             cumulative_staked = min(cumulative_staked, gross_circulating * staking_params['max_rate'])
             
-            # === ENHANCED DYNAMIC STAKING APY  ===
+            # ===  DYNAMIC STAKING APY  ===
             
             # Pool depletion progress
             pool_progress = min(1.0, years / apy_params['duration_years'])
@@ -446,7 +432,7 @@ class EnhancedTokenomicsModel:
             # Current staking ratio
             current_staking_ratio = cumulative_staked / gross_circulating if gross_circulating > 0 else 0
             
-            # ENHANCED APY CALCULATION 
+            #  APY CALCULATION 
             base_apy = apy_params['base_apy']
             min_apy = apy_params['min_apy']
             max_apy = apy_params['max_apy']
@@ -468,7 +454,7 @@ class EnhancedTokenomicsModel:
             current_market_apy = base_apy * pool_apy_multiplier * saturation_apy_multiplier * market_apy_multiplier
             current_market_apy = max(min_apy, min(max_apy, current_market_apy))
             
-            # Enhanced Staking rewards calculation 
+            #  Staking rewards calculation 
             total_staking_pool = market_staking_pool + cumulative_tax_to_staking
             
             # Pool release calculation
@@ -498,7 +484,7 @@ class EnhancedTokenomicsModel:
             else:
                 effective_circulating = max(1, gross_circulating - cumulative_staked)  # Staked hariç
             
-            # ENHANCED TOKEN PRICE (SMOOTH) 
+            #  TOKEN PRICE (SMOOTH) 
             raw_token_price = current_mcap / effective_circulating if effective_circulating > 0 else final_presale_price
             price_ma = price_ma * (1 - self.config.price_smoothing_factor * 2) + raw_token_price * (self.config.price_smoothing_factor * 2)
             token_price = price_ma
@@ -512,18 +498,21 @@ class EnhancedTokenomicsModel:
                 'gun': day,
                 'ay': months,
                 'yil': years,
-                'ceyrek': quarter + 1,
+                'ceyrek': quarter + 1,  # 1-based for display
+                'global_ceyrek': quarter,  # 0-based for calculations
                 'ceyrek_yil': quarter_year,
                 'yil_ici_ceyrek': quarter_in_year,
+                'cycle_position': quarter % 20,  # DÖNGÜ POZİSYONU (0-19)
                 'mcap_usdt': current_mcap,
                 'gross_circulating_supply': gross_circulating,
                 'effective_circulating_supply': effective_circulating,
                 'token_fiyati': token_price,
                 'presale_fiyat_orani': price_vs_presale,
                 
-                # Enhanced McAp faktörleri 
+                #  McAp faktörleri  - DÖNGÜSEL
                 'starting_mcap': starting_mcap,
                 'ceyrek_carpani': quarter_multiplier,
+                'cyclical_quarter_multiplier': quarter_multiplier,  # DÖNGÜSEL değer
                 'temelli_buyume': fundamental_growth,
                 'spekulatif_buyume': speculative_growth,
                 'maturity_effect': maturity_effect,
@@ -531,10 +520,11 @@ class EnhancedTokenomicsModel:
                 'toplam_buyume': base_growth,
                 'volatilite_etkisi': volatility_effect,
                 'market_beta': current_beta,
+                'cyclical_beta': current_beta,  # DÖNGÜSEL değer
                 'mcap_moving_average': mcap_ma,
                 'price_moving_average': price_ma,
                 
-                # Enhanced Maturity analizi  - SIMPLIFIED
+                #  Maturity analizi  - SIMPLIFIED
                 'maturity_target_mcap': maturity_params['target_mcap'],
                 'maturity_progress_pct': (current_mcap / maturity_params['target_mcap']) * 100,
                 'maturity_damping_enabled': maturity_params['enabled'],
@@ -553,7 +543,7 @@ class EnhancedTokenomicsModel:
                 'toplam_burned': total_burned,
                 'etkili_toplam_arz': self.config.total_supply - total_burned,
                 
-                # Enhanced Staking 
+                #  Staking 
                 'price_velocity': price_velocity,
                 'smoothed_price_velocity': self.smoothed_velocity,
                 'velocity_effect': velocity_effect,
@@ -566,7 +556,7 @@ class EnhancedTokenomicsModel:
                 'staking_orani': current_staking_ratio,
                 'staking_moving_average': staking_ma,
                 
-                # Enhanced Dynamic APY 
+                #  Dynamic APY 
                 'pool_remaining_ratio': pool_remaining_ratio,
                 'pool_apy_multiplier': pool_apy_multiplier,
                 'saturation_apy_multiplier': saturation_apy_multiplier,
@@ -589,7 +579,7 @@ class EnhancedTokenomicsModel:
         return pd.DataFrame(mainnet_data)
     
     def calculate_individual_vesting_schedules(self, months_projection: int = None) -> pd.DataFrame:
-        """📅 Enhanced Vesting Schedules  - AYNI"""
+        """📅  Vesting Schedules  - AYNI"""
         
         if months_projection is None:
             months_projection = self.config.vesting_analysis_months
@@ -695,11 +685,11 @@ class EnhancedTokenomicsModel:
         
         return pd.DataFrame(vesting_data)
     
-    def calculate_enhanced_metrics(self, presale_df: pd.DataFrame, 
+    def calculate__metrics(self, presale_df: pd.DataFrame, 
                                  weekly_df: pd.DataFrame,
                                  vesting_df: pd.DataFrame,
                                  mainnet_df: pd.DataFrame) -> Dict:
-        """📊 Enhanced metrikleri hesapla  - AYNI"""
+        """📊  metrikleri hesapla  -  Cyclical + AYNI"""
         
         try:
             # Presale Metrics - AYNI
@@ -734,11 +724,11 @@ class EnhancedTokenomicsModel:
                 'faiz_tipi': 'SIMPLE'
             }
             
-            # Enhanced Mainnet Metrics 
+            #  Mainnet Metrics  -  Cyclical
             max_price_idx = mainnet_df['token_fiyati'].idxmax()
             max_mcap_idx = mainnet_df['mcap_usdt'].idxmax()
             
-            # Enhanced: Average User Gains Calculation 
+            # : Average User Gains Calculation 
             avg_user_presale_investment = 1000  # $1000 ortalama yatırım
             avg_tokens_bought = avg_user_presale_investment / presale_metrics['final_presale_fiyati']
             peak_value = avg_tokens_bought * float(mainnet_df['token_fiyati'].iloc[max_price_idx])
@@ -748,7 +738,7 @@ class EnhancedTokenomicsModel:
             final_value = avg_tokens_bought * float(mainnet_df['token_fiyati'].iloc[-1])
             avg_user_final_roi = final_value / avg_user_presale_investment
             
-            # Enhanced metrics 
+            #  metrics  -  Cyclical
             mainnet_metrics = {
                 'starting_mcap': self.config.starting_mcap_usdt,
                 'launch_mcap': float(mainnet_df['mcap_usdt'].iloc[0]),
@@ -769,10 +759,17 @@ class EnhancedTokenomicsModel:
                 'toplam_tax_burned': float(mainnet_df['kumulatif_tax_burned'].iloc[-1]),
                 'toplam_rutin_burned': float(mainnet_df['kumulatif_rutin_burned'].iloc[-1]),
                 'senaryo': mainnet_df['senaryo'].iloc[0] if 'senaryo' in mainnet_df.columns else 'base',
-                'ceyrek_sayisi': 16,
                 'analiz_ay_sayisi': self.config.projection_months,
                 
-                # Enhanced: Simplified Maturity Metrics 
+                #  Cyclical Metrics 
+                'total_quarters_analyzed': len(mainnet_df) // (30.44 * 3),  # Approximate quarters
+                'cyclical_quarters_completed': int(mainnet_df['global_ceyrek'].iloc[-1]) if 'global_ceyrek' in mainnet_df.columns else 0,
+                'cycle_repetitions': (int(mainnet_df['global_ceyrek'].iloc[-1]) // 20) if 'global_ceyrek' in mainnet_df.columns else 0,
+                'final_cycle_position': int(mainnet_df['cycle_position'].iloc[-1]) if 'cycle_position' in mainnet_df.columns else 0,
+                'max_quarter_multiplier': float(mainnet_df['cyclical_quarter_multiplier'].max()) if 'cyclical_quarter_multiplier' in mainnet_df.columns else 1.0,
+                'min_quarter_multiplier': float(mainnet_df['cyclical_quarter_multiplier'].min()) if 'cyclical_quarter_multiplier' in mainnet_df.columns else 1.0,
+                
+                # : Simplified Maturity Metrics 
                 'maturity_target_mcap': float(mainnet_df['maturity_target_mcap'].iloc[0]) if 'maturity_target_mcap' in mainnet_df.columns else 0,
                 'max_maturity_progress': float(mainnet_df['maturity_progress_pct'].max()) if 'maturity_progress_pct' in mainnet_df.columns else 0,
                 'final_maturity_progress': float(mainnet_df['maturity_progress_pct'].iloc[-1]) if 'maturity_progress_pct' in mainnet_df.columns else 0,
@@ -780,7 +777,7 @@ class EnhancedTokenomicsModel:
                 'min_maturity_distance_ratio': float(mainnet_df['maturity_distance_ratio'].min()) if 'maturity_distance_ratio' in mainnet_df.columns else 1.0,
                 'maturity_damping_aktif': self.config.enable_maturity_damping,
                 
-                # Enhanced: Advanced Dynamic Staking Metrics 
+                # : Advanced Dynamic Staking Metrics 
                 'max_price_velocity': float(mainnet_df['price_velocity'].max()) if 'price_velocity' in mainnet_df.columns else 0,
                 'min_price_velocity': float(mainnet_df['price_velocity'].min()) if 'price_velocity' in mainnet_df.columns else 0,
                 'avg_smoothed_velocity': float(mainnet_df['smoothed_price_velocity'].mean()) if 'smoothed_price_velocity' in mainnet_df.columns else 0,
@@ -788,7 +785,7 @@ class EnhancedTokenomicsModel:
                 'final_pool_remaining': float(mainnet_df['pool_remaining_ratio'].iloc[-1]) if 'pool_remaining_ratio' in mainnet_df.columns else 0,
                 'total_unstaking_events': len(mainnet_df[mainnet_df['gunluk_unstaking'] > 0]) if 'gunluk_unstaking' in mainnet_df.columns else 0,
                 
-                # Enhanced: Average User Gains 
+                # : Average User Gains 
                 'ortalama_kullanici_yatirim': avg_user_presale_investment,
                 'ortalama_kullanici_token': avg_tokens_bought,
                 'ortalama_kullanici_zirve_roi': avg_user_peak_roi,
@@ -798,10 +795,13 @@ class EnhancedTokenomicsModel:
                 
                 # System health 
                 'system_version': '6.0',
+                'cyclical_quarters': True,
                 'simplified_maturity_damping': True,
-                'enhanced_dynamic_staking': True,
+                '_dynamic_staking': True,
                 'price_velocity_system': True,
-                'real_circulating_supply': True
+                'real_circulating_supply': True,
+                'unlimited_parameters': True,
+                'auto_balance_distribution': True
             }
             
             # Vesting Metrics - AYNI
@@ -823,5 +823,5 @@ class EnhancedTokenomicsModel:
             }
             
         except Exception as e:
-            st.error(f"Enhanced metrik hesaplama hatası : {e}")
+            st.error(f" metrik hesaplama hatası : {e}")
             return {'error': str(e)}

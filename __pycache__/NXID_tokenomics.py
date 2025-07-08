@@ -64,7 +64,7 @@ NXID_COLORS = {
 }
 
 @dataclass
-class EnhancedNXIDConfig:
+class NXIDConfig:
     """🔧 Gelişmiş NXID Tokenomics Yapılandırması - Tam Input Kontrolü + JSON Support"""
     
     # === TEMEL TOKEN PARAMETRELERİ ===
@@ -188,10 +188,10 @@ class EnhancedNXIDConfig:
             st.error(f"Config yükleme hatası: {e}")
             return cls()  # Default config döndür
 
-class EnhancedTokenomicsModel:
+class TokenomicsModel:
     """ Tam Özelleştirme ile Gelişmiş NXID Tokenomics Modeli v3.1"""
     
-    def __init__(self, config: EnhancedNXIDConfig):
+    def __init__(self, config: NXIDConfig):
         self.config = config
         
     def simulate_presale_with_auto_staking(self) -> pd.DataFrame:
@@ -209,7 +209,7 @@ class EnhancedTokenomicsModel:
         combined_presale_pool = presale_tokens_for_sale + presale_staking_reward_pool
         
         st.info(f"""
-        📊 **Enhanced Presale + Tax + Minimum APY Kurulumu:**
+        📊 ** Presale + Tax + Minimum APY Kurulumu:**
         - Satış İçin Tokenlar: {presale_tokens_for_sale/1e9:.1f}B NXID
         - Staking Ödül Havuzu: {presale_staking_reward_pool/1e9:.1f}B NXID
         - Birleşik Havuz: {combined_presale_pool/1e9:.1f}B NXID
@@ -779,7 +779,7 @@ class EnhancedTokenomicsModel:
         
         return pd.DataFrame(investors_data)
     
-    def create_enhanced_visualizations(self, presale_df: pd.DataFrame, 
+    def create__visualizations(self, presale_df: pd.DataFrame, 
                                      vesting_df: pd.DataFrame,
                                      projection_df: pd.DataFrame, 
                                      staking_df: pd.DataFrame,
@@ -1027,7 +1027,7 @@ class EnhancedTokenomicsModel:
         )
         charts['vesting'] = fig_vesting
         
-        # === 3. ENHANCED PRESALE COMPREHENSIVE DASHBOARD ===
+        # === 3.  PRESALE COMPREHENSIVE DASHBOARD ===
         fig_presale = make_subplots(
             rows=3, cols=2,
             subplot_titles=[
@@ -1137,7 +1137,7 @@ class EnhancedTokenomicsModel:
             row=3, col=2, secondary_y=True
         )
         
-        # === ENHANCED ANNOTATIONS ===
+        # ===  ANNOTATIONS ===
         # Tax period highlight
         tax_end_day = self.config.tax_period_months * 30.44
         if tax_end_day < len(presale_df):
@@ -1180,7 +1180,7 @@ class EnhancedTokenomicsModel:
         fig_presale.update_yaxes(title_text="Pool Depletion %", row=3, col=2, secondary_y=True)
         
         fig_presale.update_layout(
-            title=dict(text='<b>📊 Enhanced Presale Comprehensive Dashboard (Multi-Chart)</b>', x=0.5, 
+            title=dict(text='<b>📊  Presale Comprehensive Dashboard (Multi-Chart)</b>', x=0.5, 
                       font=dict(size=32, color=NXID_COLORS['primary'])),
             **chart_template, height=1000, 
             showlegend=True,
@@ -1302,7 +1302,7 @@ class EnhancedTokenomicsModel:
         fig_presale = make_subplots(
             rows=2, cols=2,
             subplot_titles=[' Daily Sales & Price (Line+Area)', '💰 Cumulative Metrics (Line)', 
-                          '🔥 Tax System Impact (Bar+Line)', '⚡ Enhanced APY Evolution (Area+Line)'],
+                          '🔥 Tax System Impact (Bar+Line)', '⚡  APY Evolution (Area+Line)'],
             specs=[[{"secondary_y": True}, {"secondary_y": True}],
                    [{"secondary_y": True}, {"secondary_y": True}]],
             vertical_spacing=0.15,
@@ -1347,7 +1347,7 @@ class EnhancedTokenomicsModel:
                 row=2, col=1, secondary_y=True
             )
         
-        # Enhanced APY evolution with minimum APY line
+        #  APY evolution with minimum APY line
         fig_presale.add_trace(
             go.Scatter(x=presale_df['day'], y=presale_df['current_apy'],
                       name='Current APY (%)', line=dict(color=NXID_COLORS['gold'], width=4),
@@ -1375,7 +1375,7 @@ class EnhancedTokenomicsModel:
                 )
         
         fig_presale.update_layout(
-            title=dict(text='<b>📊 Enhanced Presale + Tax + Minimum APY Analytics (Multi-Chart)</b>', x=0.5, 
+            title=dict(text='<b>📊  Presale + Tax + Minimum APY Analytics (Multi-Chart)</b>', x=0.5, 
                       font=dict(size=28, color=NXID_COLORS['primary'])),
             **chart_template, height=700, showlegend=True
         )
@@ -1510,7 +1510,7 @@ class EnhancedTokenomicsModel:
         # === 8. STAKING ECOSYSTEM ===
         fig_staking = make_subplots(
             rows=2, cols=1,
-            subplot_titles=['⚡ Staking Participation & APY (Line+Area)', '🏆 Enhanced Reward Distribution (Line+Bar)'],
+            subplot_titles=['⚡ Staking Participation & APY (Line+Area)', '🏆  Reward Distribution (Line+Bar)'],
             specs=[[{"secondary_y": True}], [{"secondary_y": True}]],
             vertical_spacing=0.15
         )
@@ -1530,7 +1530,7 @@ class EnhancedTokenomicsModel:
             row=1, col=1, secondary_y=True
         )
         
-        # Enhanced reward distribution
+        #  reward distribution
         fig_staking.add_trace(
             go.Scatter(x=staking_df['months'], y=staking_df['distributed_rewards']/1e9,
                       name='Distributed (B)', 
@@ -1562,7 +1562,7 @@ class EnhancedTokenomicsModel:
         
         return charts
     
-    def calculate_enhanced_metrics(self, presale_df: pd.DataFrame, 
+    def calculate__metrics(self, presale_df: pd.DataFrame, 
                                  vesting_df: pd.DataFrame,
                                  projection_df: pd.DataFrame, 
                                  staking_df: pd.DataFrame,
@@ -1717,7 +1717,7 @@ def hex_to_rgb(hex_color):
     hex_color = hex_color.lstrip('#')
     return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
 
-def load_enhanced_css():
+def load__css():
     """NXID markalaması ile gelişmiş özel CSS yükle v3.1"""
     primary_rgb = hex_to_rgb(NXID_COLORS['primary'])
     secondary_rgb = hex_to_rgb(NXID_COLORS['secondary'])
@@ -1847,7 +1847,7 @@ def load_enhanced_css():
 def main():
     """ Gelişmiş Ana Uygulama v3.1"""
     
-    load_enhanced_css()
+    load__css()
     
     # NXID Logo ile başlık
     nxid_logo = display_nxid_logo(120)
@@ -1881,7 +1881,7 @@ def main():
     st.markdown(f'''
     <p style="text-align: center; color: {NXID_COLORS['gray']}; font-size: 1.3rem; 
                font-family: Inter; margin-bottom: 2rem; font-weight: 500;">
-        Enhanced Minimum APY • Daily Sales Analytics • Random Investor ROI • JSON Config • v3.1
+         Minimum APY • Daily Sales Analytics • Random Investor ROI • JSON Config • v3.1
     </p>
     <div style="width: 100%; height: 3px; background: linear-gradient(90deg, {NXID_COLORS['primary']}, {NXID_COLORS['secondary']}); 
                 margin: 2rem auto; border-radius: 2px;"></div>
@@ -1897,7 +1897,7 @@ def main():
         </h2>
         <p style="color: {NXID_COLORS['gray']}; font-size: 0.9rem; margin: 0.5rem 0 0 0;">
             Next Digital ID (NXID)<br>
-            Enhanced JSON Configuration
+             JSON Configuration
         </p>
     </div>
     ''', unsafe_allow_html=True)
@@ -1920,7 +1920,7 @@ def main():
         with col2:
             if st.button("📁 Config Yükle", use_container_width=True):
                 try:
-                    loaded_config = EnhancedNXIDConfig.load_from_json()
+                    loaded_config = NXIDConfig.load_from_json()
                     st.session_state.current_config = loaded_config
                     st.success("✅ Config yüklendi!")
                     st.rerun()
@@ -1941,7 +1941,7 @@ def main():
     
     # Config yükleme veya yeni oluşturma
     if 'current_config' not in st.session_state:
-        st.session_state.current_config = EnhancedNXIDConfig.load_from_json()
+        st.session_state.current_config = NXIDConfig.load_from_json()
     
     config = st.session_state.current_config
     
@@ -1973,13 +1973,13 @@ def main():
         else:
             st.error(f"❌ Toplam: {total_allocation:.1f}% (100% olmalı)")
     
-    # === ENHANCED APY SİSTEMİ ===
-    with st.sidebar.expander("⚡ Enhanced APY Sistemi", expanded=True):
+    # ===  APY SİSTEMİ ===
+    with st.sidebar.expander("⚡  APY Sistemi", expanded=True):
         config.max_apy = st.number_input("Maximum APY %", 100.0, 5000.0, config.max_apy, 10.0)
         config.minimum_staking_apy = st.number_input("Minimum Staking APY % (YENİ)", 10.0, 500.0, config.minimum_staking_apy, 5.0)
         
         st.info(f"""
-        💡 **Enhanced APY Sistemi:**
+        💡 ** APY Sistemi:**
         APY {config.minimum_staking_apy}%'nin altına düştüğünde,
         presale tokenlerinden otomatik dağıtım yapılır.
         """)
@@ -2053,17 +2053,17 @@ def main():
         st.sidebar.error("❌ Yapılandırmayı düzeltin")
     
     # === SİMÜLASYON YÜRÜTME ===
-    if st.button(" Enhanced Simülasyonu Çalıştır v3.1", type="primary", use_container_width=True) and config_valid:
+    if st.button("  Simülasyonu Çalıştır v3.1", type="primary", use_container_width=True) and config_valid:
         
-        with st.spinner("Enhanced tokenomics simülasyonu v3.1 çalıştırılıyor..."):
+        with st.spinner(" tokenomics simülasyonu v3.1 çalıştırılıyor..."):
             
-            model = EnhancedTokenomicsModel(config)
+            model = TokenomicsModel(config)
             
             progress_bar = st.progress(0)
             status_text = st.empty()
             
-            # Adım 1: Enhanced Presale + Tax + Minimum APY Simülasyonu
-            status_text.text(" Enhanced Presale + Tax + Min APY sistemi simüle ediliyor...")
+            # Adım 1:  Presale + Tax + Minimum APY Simülasyonu
+            status_text.text("  Presale + Tax + Min APY sistemi simüle ediliyor...")
             presale_df = model.simulate_presale_with_auto_staking()
             progress_bar.progress(15)
             
@@ -2087,20 +2087,20 @@ def main():
             investor_analysis_df = model.generate_random_investor_analysis(presale_df, projection_df)
             progress_bar.progress(85)
             
-            # Adım 6: Enhanced Görselleştirmeler
-            status_text.text("📊 Enhanced professional görselleştirmeler oluşturuluyor...")
-            charts = model.create_enhanced_visualizations(presale_df, vesting_df, projection_df, staking_df, investor_analysis_df)
+            # Adım 6:  Görselleştirmeler
+            status_text.text("📊  professional görselleştirmeler oluşturuluyor...")
+            charts = model.create__visualizations(presale_df, vesting_df, projection_df, staking_df, investor_analysis_df)
             progress_bar.progress(95)
             
             # Adım 7: Comprehensive Metrikler
             status_text.text("🧮 Comprehensive metrikler hesaplanıyor...")
-            metrics = model.calculate_enhanced_metrics(presale_df, vesting_df, projection_df, staking_df, investor_analysis_df)
+            metrics = model.calculate__metrics(presale_df, vesting_df, projection_df, staking_df, investor_analysis_df)
             progress_bar.progress(100)
             
-            status_text.text("✅ Enhanced simülasyon v3.1 tamamlandı!")
+            status_text.text("✅  simülasyon v3.1 tamamlandı!")
             
             # Sonuçları sakla
-            st.session_state['enhanced_results'] = {
+            st.session_state['_results'] = {
                 'presale_df': presale_df,
                 'vesting_df': vesting_df,
                 'projection_df': projection_df,
@@ -2114,14 +2114,14 @@ def main():
             # Config'i otomatik kaydet
             config.save_to_json()
         
-        st.success("🎉 Enhanced simülasyon v3.1 başarıyla tamamlandı!")
+        st.success("🎉  simülasyon v3.1 başarıyla tamamlandı!")
     
     elif not config_valid:
         st.error("❌ Simülasyonu çalıştırmadan önce yapılandırmayı düzeltin")
     
     # === SONUÇLARI GÖSTER (BELİRLİ SIRADA) ===
-    if 'enhanced_results' in st.session_state:
-        results = st.session_state['enhanced_results']
+    if '_results' in st.session_state:
+        results = st.session_state['_results']
         charts = results['charts']
         metrics = results['metrics']
         
@@ -2225,7 +2225,7 @@ def main():
         st.plotly_chart(charts['vesting'], use_container_width=True)
         
         # 3. Presale ile ilgili her şey
-        st.markdown("###  3. Enhanced Presale Analytics Suite")
+        st.markdown("###  3.  Presale Analytics Suite")
         
         # 3a. Comprehensive Presale Dashboard
         st.markdown("#### 📊 3a. Presale Comprehensive Dashboard")
@@ -2265,10 +2265,10 @@ def main():
         </h2>
         ''', unsafe_allow_html=True)
         
-        tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([" Enhanced Presale", " Market Projection", "⚡ Staking Ecosystem", "📅 Vesting Analysis", "🔥 Burn & Supply", "📊 Investor Analysis"])
+        tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["  Presale", " Market Projection", "⚡ Staking Ecosystem", "📅 Vesting Analysis", "🔥 Burn & Supply", "📊 Investor Analysis"])
         
         with tab1:
-            st.markdown("###  Enhanced Presale Performance")
+            st.markdown("###   Presale Performance")
             
             col1, col2 = st.columns(2)
             with col1:
@@ -2281,7 +2281,7 @@ def main():
                 st.write(f"- **Average APY**: {metrics['presale']['average_apy']:.1f}%")
                 
             with col2:
-                st.markdown("#### ⚡ Enhanced APY System")
+                st.markdown("#### ⚡  APY System")
                 st.write(f"- **Minimum APY**: {config.minimum_staking_apy}%")
                 st.write(f"- **Min APY Usage Days**: {metrics['presale']['minimum_apy_usage_days']} days")
                 st.write(f"- **Presale Tokens Used**: {metrics['presale']['presale_tokens_used_for_rewards']/1e6:.1f}M NXID")
@@ -2436,7 +2436,7 @@ def main():
                    border-bottom: 3px solid transparent; text-align: center;
                    border-image: linear-gradient(90deg, #1B8EF2, #3effc8) 1;
                    text-shadow: 0 0 20px rgba(27, 142, 242, 0.6);">
-            📁 Enhanced Export & Configuration Management
+            📁  Export & Configuration Management
         </h2>
         ''', unsafe_allow_html=True)
         
@@ -2445,9 +2445,9 @@ def main():
         with col1:
             presale_csv = results['presale_df'].to_csv(index=False)
             st.download_button(
-                label="📥 Enhanced Presale Data",
+                label="📥  Presale Data",
                 data=presale_csv,
-                file_name="nxid_enhanced_presale_v31.csv",
+                file_name="nxid__presale_v31.csv",
                 mime="text/csv"
             )
         
@@ -2499,12 +2499,12 @@ def main():
         # === FINAL PERFORMANCE SCORE ===
         st.markdown('''
         <h3 style="color: #1B8EF2; margin: 2rem 0 1rem 0; font-family: Orbitron;">
-             Enhanced Performance Score v3.1
+              Performance Score v3.1
         </h3>
         ''', unsafe_allow_html=True)
         
         # Gelişmiş scoring sistemi
-        enhanced_score = (
+        _score = (
             (100 if abs(metrics['presale']['pool_depletion_percentage'] - 100) < 5 else 80) * 0.15 +  # Pool efficiency
             (100 if metrics['projection']['price_appreciation_vs_presale'] > 10 else 70) * 0.25 +      # Price performance
             (100 if metrics['staking']['max_staking_ratio'] > 0.4 else 60) * 0.20 +                   # Staking health
@@ -2518,7 +2518,7 @@ def main():
         
         with summary_col1:
             st.markdown(f"""
-            ** Enhanced Presale Success:**
+            **  Presale Success:**
             - Raised: ${metrics['presale']['total_raised_usdt']/1e6:.1f}M USDT
             - ROI Potential: {metrics['projection']['price_appreciation_vs_presale']:.1f}x
             - Tax Collection: {metrics['presale']['total_tax_collected']/1e6:.1f}M NXID
@@ -2543,17 +2543,17 @@ def main():
             - Tax to Staking: {metrics['presale']['total_tax_to_staking']/1e6:.1f}M NXID
             """)
         
-        # Enhanced final assessment
-        if enhanced_score >= 95:
-            st.success(f"🏆 **OUTSTANDING TOKENOMICS DESIGN** - Score: {enhanced_score:.0f}/100 - Industry Leading!")
-        elif enhanced_score >= 90:
-            st.success(f"🎉 **EXCELLENT TOKENOMICS DESIGN** - Score: {enhanced_score:.0f}/100 - Highly Optimized!")
-        elif enhanced_score >= 80:
-            st.info(f"✅ **GOOD TOKENOMICS DESIGN** - Score: {enhanced_score:.0f}/100 - Well Balanced!")
-        elif enhanced_score >= 70:
-            st.warning(f"⚠️ **FAIR TOKENOMICS DESIGN** - Score: {enhanced_score:.0f}/100 - Consider optimizations")
+        #  final assessment
+        if _score >= 95:
+            st.success(f"🏆 **OUTSTANDING TOKENOMICS DESIGN** - Score: {_score:.0f}/100 - Industry Leading!")
+        elif _score >= 90:
+            st.success(f"🎉 **EXCELLENT TOKENOMICS DESIGN** - Score: {_score:.0f}/100 - Highly Optimized!")
+        elif _score >= 80:
+            st.info(f"✅ **GOOD TOKENOMICS DESIGN** - Score: {_score:.0f}/100 - Well Balanced!")
+        elif _score >= 70:
+            st.warning(f"⚠️ **FAIR TOKENOMICS DESIGN** - Score: {_score:.0f}/100 - Consider optimizations")
         else:
-            st.error(f"❌ **NEEDS IMPROVEMENT** - Score: {enhanced_score:.0f}/100 - Significant changes required")
+            st.error(f"❌ **NEEDS IMPROVEMENT** - Score: {_score:.0f}/100 - Significant changes required")
 
 if __name__ == "__main__":
     main()

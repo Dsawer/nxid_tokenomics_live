@@ -1,4 +1,4 @@
-# NXID Enhanced Tokenomics - Web Deployment Guide
+# NXID  Tokenomics - Web Deployment Guide
 
 ## Deployment Options
 
@@ -7,7 +7,7 @@
 1. **GitHub'a push et:**
    ```bash
    git add .
-   git commit -m "NXID Enhanced Tokenomics"
+   git commit -m "NXID  Tokenomics"
    git push origin main
    ```
 

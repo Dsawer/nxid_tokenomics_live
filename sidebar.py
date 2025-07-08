@@ -1,24 +1,24 @@
 """
-NXID Enhanced Sidebar Management Module 
+NXID  Sidebar Management Module 
 ============================================
-Enhanced: Detailed Controls + Examples + Advanced Maturity + Dynamic Staking + Real Circulating Supply
+: Detailed Controls + Examples + Advanced Maturity + Dynamic Staking + Real Circulating Supply
 """
 
 import streamlit as st
 import json
 import os
-from config import EnhancedNXIDConfig
+from config import NXIDConfig
 from utils import display_nxid_logo, NXID_COLORS
 import pandas as pd
 
 class SidebarManager:
-    """Enhanced Sidebar yönetim sınıfı  - Advanced Controls with Examples"""
+    """ Sidebar yönetim sınıfı  - Advanced Controls with Examples"""
     
     def __init__(self):
         self.config = None
         
-    def render_sidebar(self) -> EnhancedNXIDConfig:
-        """Enhanced Ana sidebar'ı render et """
+    def render_sidebar(self) -> NXIDConfig:
+        """ Ana sidebar'ı render et """
         
         # Logo ve başlık
         self._render_sidebar_header()
@@ -28,11 +28,11 @@ class SidebarManager:
         
         # Config yükleme veya yeni oluşturma
         if 'current_config' not in st.session_state:
-            st.session_state.current_config = EnhancedNXIDConfig.load_from_json()
+            st.session_state.current_config = NXIDConfig.load_from_json()
         
         config = st.session_state.current_config
         
-        # === ENHANCED CONFIGURATION SECTIONS  ===
+        # ===  CONFIGURATION SECTIONS  ===
         
         # 1. Basic Analysis Settings + Starting McAp
         config = self._render_basic_analysis_settings(config)
@@ -46,11 +46,11 @@ class SidebarManager:
         # 4. Advanced Maturity Damping System
         config = self._render_advanced_maturity_damping(config)
         
-        # 5. Enhanced Dynamic Staking System
-        config = self._render_enhanced_dynamic_staking(config)
+        # 5.  Dynamic Staking System
+        config = self._render__dynamic_staking(config)
         
-        # 6. Enhanced Dynamic APY System
-        config = self._render_enhanced_dynamic_apy(config)
+        # 6.  Dynamic APY System
+        config = self._render__dynamic_apy(config)
         
         # 7. Market Dynamics & Smoothing
         config = self._render_market_dynamics(config)
@@ -61,16 +61,19 @@ class SidebarManager:
         # 9. Vesting Schedules
         config = self._render_vesting_schedules(config)
         
-        # 10. Advanced System Settings
+        # 10. YENİ: Çeyreklik Senaryo Ayarları
+        config = self._render_quarterly_scenario_settings(config)
+        
+        # 11. Advanced System Settings
         config = self._render_advanced_system_settings(config)
         
         # Update session state
         st.session_state.current_config = config
         
-        # Enhanced Validation 
+        #  Validation 
         config_valid = (config.validate_distribution() and 
-                       config.validate_tax_distribution() and
-                       config.validate_enhanced_parameters())
+                    config.validate_tax_distribution() and
+                    config.validate__parameters())
         
         if config_valid:
             st.sidebar.success("Gelişmiş Yapılandırma Geçerli ")
@@ -82,19 +85,19 @@ class SidebarManager:
                 st.sidebar.error("Token dağıtımı 100% değil")
             if not config.validate_tax_distribution():
                 st.sidebar.error("Vergi dağıtımı 100% değil")
-            if not config.validate_enhanced_parameters():
+            if not config.validate__parameters():
                 st.sidebar.error("Gelişmiş parametreler geçersiz")
         
         return config, config_valid
     
     def _render_sidebar_header(self):
-        """Enhanced Sidebar başlığını render et """
+        """ Sidebar başlığını render et """
         sidebar_logo = display_nxid_logo(80)
         st.sidebar.markdown(f'''
         <div style="text-align: center; margin-bottom: 2rem;">
             {sidebar_logo}
             <h2 style="color: {NXID_COLORS['primary']}; font-family: Orbitron; font-size: 1.4rem; margin: 1rem 0 0 0;">
-                Enhanced NXID 
+                 NXID 
             </h2>
             <p style="color: {NXID_COLORS['gray']}; font-size: 0.9rem; margin: 0.5rem 0 0 0;">
                 Gelişmiş Maturity + Dinamik Sistemler<br>
@@ -104,7 +107,7 @@ class SidebarManager:
         ''', unsafe_allow_html=True)
         
     def _render_config_management(self):
-        """Enhanced JSON Config yönetimi - Download/Upload"""
+        """ JSON Config yönetimi - Download/Upload"""
         with st.sidebar.expander("🔧 Gelişmiş Config Yönetimi", expanded=False):
             st.markdown("**📁 Config Dosya İşlemleri:**")
             
@@ -131,7 +134,7 @@ class SidebarManager:
                     st.download_button(
                         label="📄 JSON İndir",
                         data=config_json,
-                        file_name=f"nxid_enhanced_config_{pd.Timestamp.now().strftime('%Y%m%d_%H%M')}.json",
+                        file_name=f"nxid__config_{pd.Timestamp.now().strftime('%Y%m%d_%H%M')}.json",
                         mime="application/json",
                         help="Mevcut konfigürasyonu JSON dosyası olarak bilgisayarına indir",
                         use_container_width=True
@@ -191,7 +194,7 @@ class SidebarManager:
                     
                     # Validate config
                     try:
-                        loaded_config = EnhancedNXIDConfig.from_dict(config_data)
+                        loaded_config = NXIDConfig.from_dict(config_data)
                         
                         # Show preview
                         st.markdown("**🔍 Config Önizleme:**")
@@ -215,7 +218,7 @@ class SidebarManager:
                         with load_col1:
                             if st.button("✅ Config'i Yükle", type="primary", use_container_width=True):
                                 st.session_state.current_config = loaded_config
-                                st.success("🎉 Enhanced Config başarıyla yüklendi!")
+                                st.success("🎉  Config başarıyla yüklendi!")
                                 st.rerun()
                         
                         with load_col2:
@@ -253,20 +256,20 @@ class SidebarManager:
                 if st.button("📂 Lokal Yükle", use_container_width=True,
                         help="Sunucu dosya sisteminden config yükle"):
                     try:
-                        loaded_config = EnhancedNXIDConfig.load_from_json()
+                        loaded_config = NXIDConfig.load_from_json()
                         st.session_state.current_config = loaded_config
                         st.success("✅ Lokal'den yüklendi!")
                         st.rerun()
                     except Exception as e:
                         st.error(f"❌ Yükleme hatası: {e}")
-                        st.session_state.current_config = EnhancedNXIDConfig()
+                        st.session_state.current_config = NXIDConfig()
             
             # === CONFIG STATUS INFO ===
             st.markdown("### 📊 Config Durumu")
             
             config_files = [
-                "nxid_enhanced_config_v6.json", 
-                "nxid_enhanced_config_v5.json", 
+                "nxid__config_v6.json", 
+                "nxid__config_v5.json", 
                 "nxid_config.json"
             ]
             
@@ -297,17 +300,15 @@ class SidebarManager:
                 """
                 st.info(summary_text)
     
-    def _render_basic_analysis_settings(self, config: EnhancedNXIDConfig) -> EnhancedNXIDConfig:
+    def _render_basic_analysis_settings(self, config: NXIDConfig) -> NXIDConfig:
         """Temel Analiz Ayarları + Başlangıç McAp """
         with st.sidebar.expander("Temel Analiz Ayarları", expanded=True):
             
             st.markdown("### Başlangıç Market Cap (Kullanıcı Girişi)")
             config.starting_mcap_usdt = st.number_input(
                 "Başlangıç McAp ($)", 
-                min_value=1_000_000.0, 
-                max_value=100_000_000.0, 
                 value=config.starting_mcap_usdt, 
-                step=500_000.0,
+                step=10_000.0,
                 help="""
                 Başlangıç Market Cap :
                 
@@ -333,10 +334,8 @@ class SidebarManager:
             st.markdown("### Analiz Zaman Çerçeveleri")
             config.projection_months = st.number_input(
                 "Mainnet Projeksiyonu (ay)", 
-                min_value=12, 
-                max_value=60, 
                 value=config.projection_months, 
-                step=3,
+                step=1,
                 help="""
                 Mainnet Projeksiyon Dönemi:
                 
@@ -351,10 +350,8 @@ class SidebarManager:
             
             config.vesting_analysis_months = st.number_input(
                 "Vesting Analizi (ay)", 
-                min_value=24, 
-                max_value=120, 
                 value=config.vesting_analysis_months, 
-                step=6,
+                step=1,
                 help="""
                 Vesting Analiz Dönemi:
                 
@@ -372,24 +369,17 @@ class SidebarManager:
         
         return config
     
-    def _render_token_distribution(self, config: EnhancedNXIDConfig) -> EnhancedNXIDConfig:
+    def _render_token_distribution(self, config: NXIDConfig) -> NXIDConfig:
         """Token Dağıtım Ayarları"""
         with st.sidebar.expander("Token Dağıtımı", expanded=False):
             
             st.markdown("### Satış ve Staking Havuzları")
             config.presale_allocation = st.number_input(
                 "Presale Tahsisi (%)", 
-                min_value=0.0, 
-                max_value=50.0, 
                 value=config.presale_allocation, 
-                step=0.5,
+                step=0.1,
                 help="""
                 Presale Token Tahsisi:
-                
-                Örnekler:
-                • %20 = Muhafazakar presale (20B token)
-                • %26 = Standart presale (26B token)  
-                • %35 = Agresif presale (35B token)
                 
                 Etki: Yüksek % = daha fazla başlangıç likidite ama daha fazla satış baskısı
                 """
@@ -397,17 +387,10 @@ class SidebarManager:
             
             config.presale_staking_pool = st.number_input(
                 "Presale Staking Havuzu (%)", 
-                min_value=0.0, 
-                max_value=10.0, 
                 value=config.presale_staking_pool, 
                 step=0.1,
                 help="""
                 Presale Staking Ödül Havuzu:
-                
-                Örnekler:
-                • %3 = Muhafazakar ödüller (3B token)
-                • %4 = Standart ödüller (4B token)
-                • %6 = Cömert ödüller (6B token)
                 
                 Kullanım: Presale aşamasında basit faiz ödülleri
                 """
@@ -415,17 +398,10 @@ class SidebarManager:
             
             config.market_staking_pool = st.number_input(
                 "Market Staking Havuzu (%)", 
-                min_value=10.0, 
-                max_value=40.0, 
                 value=config.market_staking_pool, 
-                step=0.5,
+                step=0.1,
                 help="""
                 Lansman Sonrası Staking Havuzu:
-                
-                Örnekler:
-                • %20 = Temel staking ödülleri (20B token)
-                • %25 = Standart staking ödülleri (25B token)
-                • %30 = Cömert staking ödülleri (30B token)
                 
                 Süre: Dinamik APY ile birkaç yıl boyunca serbest bırakılır
                 """
@@ -433,17 +409,10 @@ class SidebarManager:
             
             config.liquidity = st.number_input(
                 "Likidite (%)", 
-                min_value=3.0, 
-                max_value=15.0, 
                 value=config.liquidity, 
-                step=0.5,
+                step=0.1,
                 help="""
                 DEX Likidite Tahsisi:
-                
-                Örnekler:
-                • %5 = Minimal likidite (5B token)
-                • %7 = Standart likidite (7B token)
-                • %10 = Yüksek likidite (10B token)
                 
                 Kullanım: DEX işlem çiftleri için anında kullanılabilir
                 """
@@ -452,35 +421,21 @@ class SidebarManager:
             st.markdown("### Takım ve Organizasyon")
             config.team_allocation = st.number_input(
                 "Takım Tahsisi (%)", 
-                min_value=10.0, 
-                max_value=25.0, 
                 value=config.team_allocation, 
-                step=0.5,
+                step=0.1,
                 help="""
                 Geliştirme Takımı Tahsisi:
-                
-                Örnekler:
-                • %12 = Sade takım tahsisi (12B token)
-                • %15 = Standart takım tahsisi (15B token)
-                • %20 = Cömert takım tahsisi (20B token)
-                
+
                 Vesting: Cliff ve doğrusal vesting programına tabidir
                 """
             )
             
             config.dao_treasury = st.number_input(
                 "DAO Hazinesi (%)", 
-                min_value=10.0, 
-                max_value=25.0, 
                 value=config.dao_treasury, 
-                step=0.5,
+                step=0.1,
                 help="""
                 DAO Hazine Tahsisi:
-                
-                Örnekler:
-                • %12 = Muhafazakar yönetişim (12B token)
-                • %15 = Standart yönetişim (15B token) 
-                • %20 = Güçlü yönetişim (20B token)
                 
                 Kullanım: Topluluk önerileri, ekosistem geliştirme, ortaklıklar
                 """
@@ -488,17 +443,11 @@ class SidebarManager:
             
             config.marketing = st.number_input(
                 "Pazarlama (%)", 
-                min_value=5.0, 
-                max_value=15.0, 
                 value=config.marketing, 
-                step=0.5,
+                step=0.1,
                 help="""
                 Pazarlama ve Büyüme Tahsisi:
                 
-                Örnekler:
-                • %6 = Muhafazakar pazarlama (6B token)
-                • %8 = Standart pazarlama (8B token)
-                • %12 = Agresif pazarlama (12B token)
                 
                 Kullanım: Kampanyalar, ortaklıklar, topluluk teşvikleri, airdroplar
                 """
@@ -516,15 +465,13 @@ class SidebarManager:
         
         return config
     
-    def _render_presale_configuration(self, config: EnhancedNXIDConfig) -> EnhancedNXIDConfig:
+    def _render_presale_configuration(self, config: NXIDConfig) -> NXIDConfig:
         """Presale Yapılandırması"""
         with st.sidebar.expander("Presale Yapılandırması", expanded=False):
             
             st.markdown("### Temel Presale Ayarları")
             config.presale_days = st.number_input(
                 "Presale Süresi (gün)", 
-                min_value=30, 
-                max_value=365, 
                 value=config.presale_days,
                 help="""
                 Presale Süresi:
@@ -540,11 +487,9 @@ class SidebarManager:
             
             config.start_price_usdt = st.number_input(
                 "Başlangıç Fiyatı ($)", 
-                min_value=0.0001, 
-                max_value=0.01, 
                 value=config.start_price_usdt, 
-                step=0.0001, 
-                format="%.4f",
+                step=0.00001, 
+                format="%.6f",
                 help="""
                 İlk Token Fiyatı:
                 
@@ -559,10 +504,9 @@ class SidebarManager:
             
             config.daily_price_increase = st.number_input(
                 "Günlük Fiyat Artışı (%)", 
-                min_value=0.0, 
-                max_value=0.2, 
                 value=config.daily_price_increase, 
-                step=0.01,
+                step=0.001,
+                format="%.6f",
                 help="""
                 Günlük Fiyat Büyümesi:
                 
@@ -578,10 +522,8 @@ class SidebarManager:
             st.markdown("### Talep Modellemesi")
             config.base_daily_demand_usdt = st.number_input(
                 "Temel Günlük Talep ($)", 
-                min_value=500.0, 
-                max_value=10000.0, 
                 value=config.base_daily_demand_usdt, 
-                step=100.0,
+                step=10.0,
                 help="""
                 İlk Günlük Yatırım Hacmi:
                 
@@ -596,10 +538,9 @@ class SidebarManager:
             
             config.demand_growth_rate = st.number_input(
                 "Talep Büyüme Oranı (günlük çarpan)", 
-                min_value=1.001, 
-                max_value=1.05, 
                 value=config.demand_growth_rate, 
-                step=0.001,
+                step=0.0001,
+                format="%.6f",
                 help="""
                 Günlük Talep Büyümesi:
                 
@@ -614,10 +555,9 @@ class SidebarManager:
             
             config.demand_volatility = st.number_input(
                 "Talep Volatilitesi", 
-                min_value=0.01, 
-                max_value=0.2, 
                 value=config.demand_volatility, 
-                step=0.01,
+                step=0.001,
+                format="%.6f",
                 help="""
                 Günlük Talep Volatilitesi:
                 
@@ -633,10 +573,8 @@ class SidebarManager:
             st.markdown("### Basit Faiz APY Sistemi")
             config.max_apy = st.number_input(
                 "Maksimum APY (%)", 
-                min_value=100.0, 
-                max_value=10000.0, 
                 value=config.max_apy, 
-                step=50.0,
+                step=1.0,
                 help="""
                 Maksimum APY Sınırı:
                 
@@ -652,10 +590,8 @@ class SidebarManager:
             
             config.minimum_staking_apy = st.number_input(
                 "Minimum APY (%)", 
-                min_value=10.0, 
-                max_value=200.0, 
                 value=config.minimum_staking_apy, 
-                step=5.0,
+                step=1.0,
                 help="""
                 Minimum APY Tabanı:
                 
@@ -684,10 +620,8 @@ class SidebarManager:
             if config.weekly_analysis:
                 config.weekly_investment_amount = st.number_input(
                     "Haftalık Yatırım ($)", 
-                    min_value=100.0, 
-                    max_value=5000.0, 
                     value=config.weekly_investment_amount, 
-                    step=50.0,
+                    step=10.0,
                     help="""
                     Sabit Haftalık Yatırım:
                     
@@ -714,7 +648,7 @@ class SidebarManager:
         
         return config
     
-    def _render_advanced_maturity_damping(self, config: EnhancedNXIDConfig) -> EnhancedNXIDConfig:
+    def _render_advanced_maturity_damping(self, config: NXIDConfig) -> NXIDConfig:
         """Gelişmiş Maturity Damping Sistemi """
         with st.sidebar.expander("Gelişmiş Maturity Damping ", expanded=False):
             
@@ -739,10 +673,8 @@ class SidebarManager:
             if config.enable_maturity_damping:
                 config.maturity_target_mcap = st.number_input(
                     "Hedef Market Cap ($)", 
-                    min_value=100_000_000.0, 
-                    max_value=10_000_000_000.0, 
                     value=config.maturity_target_mcap, 
-                    step=50_000_000.0,
+                    step=1000.0,
                     help="""
                     Maturity Hedef Market Cap:
                     
@@ -758,10 +690,9 @@ class SidebarManager:
                 
                 config.maturity_damping_strength = st.number_input(
                     "Damping Gücü", 
-                    min_value=0.1, 
-                    max_value=1.0, 
                     value=config.maturity_damping_strength, 
-                    step=0.05,
+                    step=0.001,
+                    format="%.6f",
                     help="""
                     Damping Kuvvet Gücü:
                     
@@ -777,10 +708,9 @@ class SidebarManager:
                 
                 config.maturity_convergence_speed = st.number_input(
                     "Yakınsama Hızı", 
-                    min_value=0.05, 
-                    max_value=0.5, 
                     value=config.maturity_convergence_speed, 
-                    step=0.01,
+                    step=0.001,
+                    format="%.6f",
                     help="""
                     Yakınsama Hızı:
                     
@@ -796,10 +726,9 @@ class SidebarManager:
                 
                 config.maturity_boost_multiplier = st.number_input(
                     "Boost Çarpanı (hedefin altında)", 
-                    min_value=1.1, 
-                    max_value=3.0, 
                     value=config.maturity_boost_multiplier, 
-                    step=0.1,
+                    step=0.01,
+                    format="%.6f",
                     help="""
                     Boost Etkisi (Hedefin Altında):
                     
@@ -815,10 +744,9 @@ class SidebarManager:
                 
                 config.maturity_damp_multiplier = st.number_input(
                     "Damp Çarpanı (hedefin üstünde)", 
-                    min_value=0.3, 
-                    max_value=0.9, 
                     value=config.maturity_damp_multiplier, 
-                    step=0.05,
+                    step=0.001,
+                    format="%.6f",
                     help="""
                     Damp Etkisi (Hedefin Üstünde):
                     
@@ -850,17 +778,16 @@ class SidebarManager:
         
         return config
     
-    def _render_enhanced_dynamic_staking(self, config: EnhancedNXIDConfig) -> EnhancedNXIDConfig:
+    def _render__dynamic_staking(self, config: NXIDConfig) -> NXIDConfig:
         """Gelişmiş Dinamik Staking Sistemi """
         with st.sidebar.expander("Gelişmiş Dinamik Staking ", expanded=False):
             
             st.markdown("### Staking Katılım Aralığı")
             config.min_staking_rate = st.number_input(
-                "Minimum Staking Oranı", 
-                min_value=0.05, 
-                max_value=0.5, 
+                "Minimum Staking Oranı",  
                 value=config.min_staking_rate, 
-                step=0.01,
+                step=0.001,
+                format="%.6f",
                 help="""
                 Minimum Staking Katılımı:
                 
@@ -877,9 +804,9 @@ class SidebarManager:
             config.base_staking_rate = st.number_input(
                 "Temel Staking Oranı", 
                 min_value=config.min_staking_rate, 
-                max_value=0.8, 
                 value=config.base_staking_rate, 
-                step=0.01,
+                step=0.001,
+                format="%.6f",
                 help="""
                 Nötr Staking Katılımı:
                 
@@ -896,9 +823,9 @@ class SidebarManager:
             config.max_staking_rate = st.number_input(
                 "Maksimum Staking Oranı", 
                 min_value=config.base_staking_rate, 
-                max_value=0.95, 
                 value=config.max_staking_rate, 
-                step=0.01,
+                step=0.001,
+                format="%.6f",
                 help="""
                 Maksimum Staking Katılımı:
                 
@@ -915,10 +842,9 @@ class SidebarManager:
             st.markdown("### Fiyat Hızı Etki Sistemi")
             config.price_velocity_impact = st.number_input(
                 "Fiyat Hızı Etkisi", 
-                min_value=-1.0, 
-                max_value=0.0, 
                 value=config.price_velocity_impact, 
-                step=0.05,
+                step=0.001,
+                format="%.6f",
                 help="""
                 Fiyat Hızı Hassasiyeti:
                 
@@ -936,8 +862,6 @@ class SidebarManager:
             
             config.price_velocity_window = st.number_input(
                 "Fiyat Hızı Penceresi (gün)", 
-                min_value=3, 
-                max_value=30, 
                 value=config.price_velocity_window, 
                 step=1,
                 help="""
@@ -955,10 +879,9 @@ class SidebarManager:
             
             config.price_velocity_smoothing = st.number_input(
                 "Fiyat Hızı Yumuşatma", 
-                min_value=0.1, 
-                max_value=0.8, 
                 value=config.price_velocity_smoothing, 
-                step=0.05,
+                step=0.001,
+                format="%.6f",
                 help="""
                 Fiyat Hızı Yumuşatma Faktörü:
                 
@@ -974,11 +897,10 @@ class SidebarManager:
             
             st.markdown("### Staking Dinamikleri")
             config.staking_momentum = st.number_input(
-                "Staking Momentum", 
-                min_value=0.5, 
-                max_value=0.95, 
+                "Staking Momentum",  
                 value=config.staking_momentum, 
-                step=0.05,
+                step=0.001,
+                format="%.6f",
                 help="""
                 Staking Değişim Momentum:
                 
@@ -994,10 +916,9 @@ class SidebarManager:
             
             config.staking_entry_speed = st.number_input(
                 "Staking Giriş Hızı", 
-                min_value=0.001, 
-                max_value=0.01, 
                 value=config.staking_entry_speed, 
-                step=0.0005,
+                step=0.0001,
+                format="%.6f",
                 help="""
                 Yeni Staking Giriş Oranı:
                 
@@ -1013,10 +934,9 @@ class SidebarManager:
             
             config.staking_exit_speed = st.number_input(
                 "Staking Çıkış Hızı", 
-                min_value=0.002, 
-                max_value=0.02, 
                 value=config.staking_exit_speed, 
-                step=0.001,
+                step=0.0001,
+                format="%.6f",
                 help="""
                 Staking Çıkış Oranı:
                 
@@ -1045,17 +965,16 @@ class SidebarManager:
         
         return config
     
-    def _render_enhanced_dynamic_apy(self, config: EnhancedNXIDConfig) -> EnhancedNXIDConfig:
+    def _render__dynamic_apy(self, config: NXIDConfig) -> NXIDConfig:
         """Gelişmiş Dinamik APY Sistemi """
         with st.sidebar.expander("Gelişmiş Dinamik APY ", expanded=False):
             
             st.markdown("### APY Aralık Yapılandırması")
             config.min_staking_apy = st.number_input(
                 "Minimum Staking APY (%)", 
-                min_value=5.0, 
-                max_value=50.0, 
                 value=config.min_staking_apy, 
-                step=1.0,
+                step=0.1,
+                format="%.4f",
                 help="""
                 Minimum APY Tabanı:
                 
@@ -1072,9 +991,9 @@ class SidebarManager:
             config.base_staking_apy = st.number_input(
                 "Temel Staking APY (%)", 
                 min_value=config.min_staking_apy, 
-                max_value=150.0, 
                 value=config.base_staking_apy, 
-                step=5.0,
+                step=0.1,
+                format="%.4f",
                 help="""
                 Temel Staking APY:
                 
@@ -1091,9 +1010,9 @@ class SidebarManager:
             config.max_staking_apy = st.number_input(
                 "Maksimum Staking APY (%)", 
                 min_value=config.base_staking_apy, 
-                max_value=500.0, 
                 value=config.max_staking_apy, 
-                step=10.0,
+                step=0.1,
+                format="%.4f",
                 help="""
                 Maksimum APY Tavanı:
                 
@@ -1110,15 +1029,13 @@ class SidebarManager:
             st.markdown("### APY Hesaplama Faktörleri")
             config.staking_pool_duration_years = st.number_input(
                 "Staking Havuzu Süresi (yıl)", 
-                min_value=3, 
-                max_value=15, 
                 value=config.staking_pool_duration_years, 
                 step=1,
                 help="""
                 Staking Havuzu Serbest Bırakma Süresi:
                 
                 Örnekler:
-                • 5 yıl = Daha hızlı tükenme, yüksek erken APY
+                • 5 yıl = Daha hızlı tükenme, yüksek erpy -m streamlit run NXID_tokenomics.pyken APY
                 • 8 yıl = Standart süre ( varsayılan)
                 • 12 yıl = Daha yavaş tükenme, daha istikrarlı APY
                 
@@ -1129,10 +1046,9 @@ class SidebarManager:
             
             config.pool_depletion_apy_factor = st.number_input(
                 "Havuz Tükenme APY Faktörü", 
-                min_value=0.3, 
-                max_value=1.5, 
                 value=config.pool_depletion_apy_factor, 
-                step=0.05,
+                step=0.01,
+                format="%.4f",
                 help="""
                 Havuz Tükenmesinin APY'ye Etkisi:
                 
@@ -1148,10 +1064,9 @@ class SidebarManager:
             
             config.staking_saturation_factor = st.number_input(
                 "Staking Doygunluk Faktörü", 
-                min_value=0.2, 
-                max_value=1.0, 
                 value=config.staking_saturation_factor, 
-                step=0.05,
+                step=0.01,
+                format="%.4f",
                 help="""
                 Staking Doygunluk Etkisi:
                 
@@ -1167,10 +1082,9 @@ class SidebarManager:
             
             config.market_demand_apy_factor = st.number_input(
                 "Market Talep APY Faktörü", 
-                min_value=0.1, 
-                max_value=0.8, 
                 value=config.market_demand_apy_factor, 
-                step=0.05,
+                step=0.01,
+                format="%.4f",
                 help="""
                 Market Büyümesinin APY'ye Etkisi:
                 
@@ -1199,17 +1113,16 @@ class SidebarManager:
         
         return config
     
-    def _render_market_dynamics(self, config: EnhancedNXIDConfig) -> EnhancedNXIDConfig:
+    def _render_market_dynamics(self, config: NXIDConfig) -> NXIDConfig:
         """Market Dinamikleri ve Yumuşatma"""
         with st.sidebar.expander("Market Dinamikleri ve Yumuşatma", expanded=False):
             
             st.markdown("### Temel Market Parametreleri")
             config.market_volatility = st.number_input(
                 "Market Volatilitesi", 
-                min_value=0.02, 
-                max_value=0.3, 
                 value=config.market_volatility, 
-                step=0.01,
+                step=0.001,
+                format="%.6f",
                 help="""
                 Günlük Market Volatilitesi:
                 
@@ -1225,10 +1138,9 @@ class SidebarManager:
             
             config.market_beta = st.number_input(
                 "Market Beta", 
-                min_value=0.5, 
-                max_value=2.0, 
                 value=config.market_beta, 
-                step=0.1,
+                step=0.01,
+                format="%.6f",
                 help="""
                 Market Beta (kripto piyasasına karşı):
                 
@@ -1243,10 +1155,9 @@ class SidebarManager:
             
             config.speculative_ratio = st.number_input(
                 "Spekülatif Oran", 
-                min_value=0.3, 
-                max_value=0.9, 
                 value=config.speculative_ratio, 
-                step=0.05,
+                step=0.001,
+                format="%.6f",
                 help="""
                 Spekülasyon vs Temeller:
                 
@@ -1262,10 +1173,9 @@ class SidebarManager:
             
             config.fundamental_growth_rate = st.number_input(
                 "Aylık Temel Büyüme", 
-                min_value=0.005, 
-                max_value=0.05, 
                 value=config.fundamental_growth_rate, 
-                step=0.002,
+                step=0.0002,
+                format="%.6f",
                 help="""
                 Aylık Temel Büyüme:
                 
@@ -1282,10 +1192,9 @@ class SidebarManager:
             st.markdown("### Yumuşatma Parametreleri")
             config.price_smoothing_factor = st.number_input(
                 "Fiyat Yumuşatma Faktörü", 
-                min_value=0.05, 
-                max_value=0.5, 
                 value=config.price_smoothing_factor, 
-                step=0.01,
+                step=0.001,
+                format="%.6f",
                 help="""
                 Fiyat Hareket Yumuşatması:
                 
@@ -1300,11 +1209,10 @@ class SidebarManager:
             )
             
             config.mcap_smoothing_factor = st.number_input(
-                "Market Cap Yumuşatma Faktörü", 
-                min_value=0.05, 
-                max_value=0.5, 
+                "Market Cap Yumuşatma Faktörü",  
                 value=config.mcap_smoothing_factor, 
-                step=0.01,
+                step=0.001,
+                format="%.6f",
                 help="""
                 Market Cap Yumuşatması:
                 
@@ -1320,10 +1228,9 @@ class SidebarManager:
             
             config.volatility_damping = st.number_input(
                 "Volatilite Damping", 
-                min_value=0.3, 
-                max_value=1.0, 
                 value=config.volatility_damping, 
-                step=0.05,
+                step=0.001,
+                format="%.6f",
                 help="""
                 Volatilite Azaltma Faktörü:
                 
@@ -1352,15 +1259,13 @@ class SidebarManager:
         
         return config
     
-    def _render_tax_burn_system(self, config: EnhancedNXIDConfig) -> EnhancedNXIDConfig:
+    def _render_tax_burn_system(self, config: NXIDConfig) -> NXIDConfig:
         """Vergi ve Yakma Sistemi"""
         with st.sidebar.expander("Vergi ve Yakma Sistemi", expanded=False):
             
             st.markdown("### Mainnet Vergi Sistemi")
             config.mainnet_tax_period_months = st.number_input(
                 "Vergi Dönemi (ay)", 
-                min_value=3, 
-                max_value=24, 
                 value=config.mainnet_tax_period_months, 
                 step=1,
                 help="""
@@ -1378,10 +1283,9 @@ class SidebarManager:
             
             config.mainnet_tax_rate = st.number_input(
                 "Vergi Oranı (%)", 
-                min_value=1.0, 
-                max_value=10.0, 
                 value=config.mainnet_tax_rate, 
-                step=0.5,
+                step=0.1,
+                format="%.4f",
                 help="""
                 İşlem Hacmi Vergi Oranı:
                 
@@ -1397,10 +1301,9 @@ class SidebarManager:
             
             config.tax_to_staking_percentage = st.number_input(
                 "Staking'e Vergi (%)", 
-                min_value=40.0, 
-                max_value=80.0, 
                 value=config.tax_to_staking_percentage, 
-                step=5.0,
+                step=0.1,
+                format="%.4f",
                 help="""
                 Staking'e Vergi Tahsisi:
                 
@@ -1416,10 +1319,9 @@ class SidebarManager:
             
             config.tax_to_burn_percentage = st.number_input(
                 "Yakma'ya Vergi (%)", 
-                min_value=20.0, 
-                max_value=60.0, 
                 value=config.tax_to_burn_percentage, 
-                step=5.0,
+                step=0.1,
+                format="%.4f",
                 help="""
                 Yakma'ya Vergi Tahsisi:
                 
@@ -1436,10 +1338,9 @@ class SidebarManager:
             st.markdown("### Yakma Mekanizması")
             config.annual_burn_rate = st.number_input(
                 "Yıllık Yakma Oranı", 
-                min_value=0.01, 
-                max_value=0.1, 
                 value=config.annual_burn_rate, 
                 step=0.005,
+                format="%.6f",
                 help="""
                 Yıllık Rutin Yakma Oranı:
                 
@@ -1454,9 +1355,7 @@ class SidebarManager:
             )
             
             config.burn_duration_years = st.number_input(
-                "Yakma Süresi (yıl)", 
-                min_value=2, 
-                max_value=10, 
+                "Yakma Süresi (yıl)",  
                 value=config.burn_duration_years, 
                 step=1,
                 help="""
@@ -1492,7 +1391,7 @@ class SidebarManager:
         
         return config
     
-    def _render_vesting_schedules(self, config: EnhancedNXIDConfig) -> EnhancedNXIDConfig:
+    def _render_vesting_schedules(self, config: NXIDConfig) -> NXIDConfig:
         """Vesting Programları"""
         with st.sidebar.expander("Vesting Programları", expanded=False):
             
@@ -1501,8 +1400,6 @@ class SidebarManager:
             
             config.market_staking_cliff_months = st.number_input(
                 "Market Staking Cliff (ay)", 
-                min_value=3, 
-                max_value=24, 
                 value=config.market_staking_cliff_months, 
                 step=1,
                 help="""
@@ -1520,10 +1417,8 @@ class SidebarManager:
             
             config.market_staking_vesting_months = st.number_input(
                 "Market Staking Vesting (ay)", 
-                min_value=12, 
-                max_value=60, 
                 value=config.market_staking_vesting_months, 
-                step=3,
+                step=1,
                 help="""
                 Market Staking Havuzu Vesting:
                 
@@ -1540,10 +1435,8 @@ class SidebarManager:
             st.markdown("### Takım ve Organizasyon Vesting")
             config.team_cliff_months = st.number_input(
                 "Takım Cliff (ay)", 
-                min_value=6, 
-                max_value=24, 
                 value=config.team_cliff_months, 
-                step=3,
+                step=1,
                 help="""
                 Takım Token Cliff:
                 
@@ -1558,10 +1451,8 @@ class SidebarManager:
             
             config.team_vesting_months = st.number_input(
                 "Takım Vesting (ay)", 
-                min_value=24, 
-                max_value=48, 
                 value=config.team_vesting_months, 
-                step=6,
+                step=1,
                 help="""
                 Takım Vesting Süresi:
                 
@@ -1576,10 +1467,8 @@ class SidebarManager:
             
             config.dao_cliff_months = st.number_input(
                 "DAO Cliff (ay)", 
-                min_value=3, 
-                max_value=18, 
                 value=config.dao_cliff_months, 
-                step=3,
+                step=1,
                 help="""
                 DAO Hazine Cliff:
                 
@@ -1593,11 +1482,9 @@ class SidebarManager:
             )
             
             config.dao_vesting_months = st.number_input(
-                "DAO Vesting (ay)", 
-                min_value=18, 
-                max_value=48, 
+                "DAO Vesting (ay)",  
                 value=config.dao_vesting_months, 
-                step=6,
+                step=1,
                 help="""
                 DAO Hazine Vesting:
                 
@@ -1612,10 +1499,8 @@ class SidebarManager:
             
             config.marketing_cliff_months = st.number_input(
                 "Pazarlama Cliff (ay)", 
-                min_value=0, 
-                max_value=12, 
                 value=config.marketing_cliff_months, 
-                step=3,
+                step=1,
                 help="""
                 Pazarlama Tahsis Cliff:
                 
@@ -1630,10 +1515,8 @@ class SidebarManager:
             
             config.marketing_vesting_months = st.number_input(
                 "Pazarlama Vesting (ay)", 
-                min_value=6, 
-                max_value=24, 
                 value=config.marketing_vesting_months, 
-                step=3,
+                step=1,
                 help="""
                 Pazarlama Vesting Süresi:
                 
@@ -1662,8 +1545,199 @@ class SidebarManager:
             """)
         
         return config
-    
-    def _render_advanced_system_settings(self, config: EnhancedNXIDConfig) -> EnhancedNXIDConfig:
+
+    def _show_quarterly_preview(self, config: NXIDConfig):
+        """Çeyreklik multiplier önizlemesi göster"""
+        import pandas as pd
+        
+        # Geçici hesaplama
+        temp_config = NXIDConfig()
+        temp_config.bear_quarterly_base_multiplier = config.bear_quarterly_base_multiplier
+        temp_config.bear_quarterly_change_rate = config.bear_quarterly_change_rate
+        temp_config.bear_recovery_start_quarter = config.bear_recovery_start_quarter
+        temp_config.bear_recovery_rate = config.bear_recovery_rate
+        temp_config.base_quarterly_base_multiplier = config.base_quarterly_base_multiplier
+        temp_config.base_quarterly_change_rate = config.base_quarterly_change_rate
+        temp_config.base_volatility_amplitude = config.base_volatility_amplitude
+        temp_config.base_growth_trend = config.base_growth_trend
+        temp_config.bull_quarterly_base_multiplier = config.bull_quarterly_base_multiplier
+        temp_config.bull_quarterly_change_rate = config.bull_quarterly_change_rate
+        temp_config.bull_euphoria_start_quarter = config.bull_euphoria_start_quarter
+        temp_config.bull_correction_start_quarter = config.bull_correction_start_quarter
+        
+        temp_config._generate_dynamic_quarterly_multipliers()
+        
+        st.markdown("#### 📊 Çeyreklik Multiplier Önizlemesi (20 Çeyrek)")
+        
+        preview_data = []
+        for i in range(20):
+            year = (i // 4) + 1
+            quarter_in_year = (i % 4) + 1
+            
+            preview_data.append({
+                'Çeyrek': f"Y{year}Q{quarter_in_year}",
+                'Bear': f"{temp_config.bear_scenario_multipliers[i]:.2f}x",
+                'Base': f"{temp_config.base_scenario_multipliers[i]:.2f}x", 
+                'Bull': f"{temp_config.bull_scenario_multipliers[i]:.2f}x"
+            })
+        
+        # İlk 8 çeyrek göster
+        st.table(pd.DataFrame(preview_data[:8]))
+        
+        with st.expander("Tüm 20 Çeyreği Göster"):
+            st.table(pd.DataFrame(preview_data))
+        
+    def _render_quarterly_scenario_settings(self, config: NXIDConfig) -> NXIDConfig:
+        """YENİ: Çeyreklik Senaryo Ayarları - Kullanıcı Kontrollü"""
+        with st.sidebar.expander("🔄 Çeyreklik Senaryo Dinamikleri (5 Yıl Döngüsü)", expanded=False):
+            
+            st.markdown("### 🐻 Bear Scenario Çeyrek Parametreleri")
+            config.bear_quarterly_base_multiplier = st.number_input(
+                "Bear Başlangıç Çarpanı", 
+                value=config.bear_quarterly_base_multiplier, 
+                step=0.05,
+                format="%.6f",
+                help="""
+                Bear Market Başlangıç Seviyesi:
+                
+                Örnekler:
+                • 0.6 = Çok sert düşüş başlangıcı
+                • 0.8 = Standart bear başlangıcı
+                • 1.0 = Hafif bear başlangıcı
+                
+                Bu değer ilk çeyreğin çarpanını belirler
+                """
+            )
+            
+            config.bear_quarterly_change_rate = st.number_input(
+                "Bear Çeyreklik Değişim Oranı", 
+                value=config.bear_quarterly_change_rate, 
+                step=0.01,
+                format="%.6f",
+                help="""
+                Her çeyrek bear'ın ne kadar değişeceği:
+                
+                Örnekler:
+                • 0.03 = Yavaş değişim (%3 çeyreklik)
+                • 0.05 = Standart değişim (%5 çeyreklik)
+                • 0.08 = Hızlı değişim (%8 çeyreklik)
+                
+                Düşüş döneminde azalma, toparlanmada artış oranı
+                """
+            )
+            
+            config.bear_recovery_start_quarter = st.number_input(
+                "Bear Toparlanma Başlangıç Çeyreği", 
+                value=config.bear_recovery_start_quarter, 
+                step=1,
+                help="""
+                Kaç çeyrek sonra toparlanma başlar:
+                
+                Örnekler:
+                • 6 = Erken toparlanma (1.5 yıl sonra)
+                • 8 = Standart toparlanma (2 yıl sonra)
+                • 12 = Geç toparlanma (3 yıl sonra)
+                """
+            )
+            
+            config.bear_recovery_rate = st.number_input(
+                "Bear Toparlanma Oranı", 
+                value=config.bear_recovery_rate, 
+                step=0.01,
+                format="%.6f",
+                help="""
+                Toparlanma dönemindeki çeyreklik büyüme:
+                
+                Örnekler:
+                • 0.05 = Yavaş toparlanma (%5 çeyreklik)
+                • 0.08 = Standart toparlanma (%8 çeyreklik)
+                • 0.12 = Hızlı toparlanma (%12 çeyreklik)
+                """
+            )
+            
+            st.markdown("### 📊 Base Scenario Çeyrek Parametreleri")
+            config.base_quarterly_base_multiplier = st.number_input(
+                "Base Başlangıç Çarpanı", 
+                value=config.base_quarterly_base_multiplier, 
+                step=0.05,
+                format="%.6f",
+                help="Base market normalin ne kadar üstünde/altında başlar"
+            )
+            
+            config.base_quarterly_change_rate = st.number_input(
+                "Base Çeyreklik Değişim Oranı", 
+                value=config.base_quarterly_change_rate, 
+                step=0.01,
+                format="%.6f",
+                help="Base market çeyreklik büyüme oranı"
+            )
+            
+            config.base_volatility_amplitude = st.number_input(
+                "Base Volatilite Genliği", 
+                value=config.base_volatility_amplitude, 
+                step=0.01,
+                format="%.6f",
+                help="""
+                Base market dalgalanma genliği:
+                
+                Örnekler:
+                • 0.05 = Düşük dalgalanma
+                • 0.10 = Standart dalgalanma  
+                • 0.15 = Yüksek dalgalanma
+                """
+            )
+            
+            config.base_growth_trend = st.number_input(
+                "Base Büyüme Trendi", 
+                value=config.base_growth_trend, 
+                step=0.005,
+                format="%.6f",
+                help="5 yıl boyunca sürekli büyüme trendi"
+            )
+            
+            st.markdown("### 🐂 Bull Scenario Çeyrek Parametreleri")
+            config.bull_quarterly_base_multiplier = st.number_input(
+                "Bull Başlangıç Çarpanı", 
+                value=config.bull_quarterly_base_multiplier, 
+                step=0.1,
+                format="%.6f",
+                help="Bull market ne kadar güçlü başlar"
+            )
+            
+            config.bull_quarterly_change_rate = st.number_input(
+                "Bull Çeyreklik Değişim Oranı", 
+                value=config.bull_quarterly_change_rate, 
+                step=0.01,
+                format="%.6f",
+                help="Bull market çeyreklik büyüme oranı"
+            )
+            
+            config.bull_euphoria_start_quarter = st.number_input(
+                "Bull Euphoria Başlangıç Çeyreği", 
+                value=config.bull_euphoria_start_quarter, 
+                step=1,
+                help="Kaç çeyrek sonra euphoria dönemi başlar"
+            )
+            
+            config.bull_correction_start_quarter = st.number_input(
+                "Bull Düzeltme Başlangıç Çeyreği", 
+                value=config.bull_correction_start_quarter, 
+                step=1,
+                help="Kaç çeyrek sonra düzeltme dönemi başlar"
+            )
+            
+            # Önizleme butonu
+            if st.button("🔍 Çeyrek Önizlemesi Göster", use_container_width=True):
+                self._show_quarterly_preview(config)
+            
+            # Dinamik hesaplama butonu
+            if st.button("🔄 Çeyrek Multiplier'ları Yeniden Hesapla", use_container_width=True):
+                config._generate_dynamic_quarterly_multipliers()
+                st.success("✅ Çeyreklik multiplier'lar kullanıcı ayarlarına göre yeniden hesaplandı!")
+        
+        return config
+
+    def _render_advanced_system_settings(self, config: NXIDConfig) -> NXIDConfig:
         """Gelişmiş Sistem Ayarları"""
         with st.sidebar.expander("Gelişmiş Sistem Ayarları", expanded=False):
             
@@ -1720,7 +1794,7 @@ class SidebarManager:
             st.markdown("### Sistem Versiyon Bilgisi")
             system_info = config.get_system_info()
             st.info(f"""
-            Enhanced NXID v{system_info['version']}:
+             NXID v{system_info['version']}:
             
             **Aktif Özellikler:**
             • {system_info['features'][0]}

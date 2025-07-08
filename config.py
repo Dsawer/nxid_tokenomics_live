@@ -1,7 +1,7 @@
 """
-NXID Enhanced Configuration Module 
+NXID  Configuration Module 
 ========================================
-Enhanced: Advanced Maturity Damping + Dynamic Staking + Real Circulating Supply + Price Velocity
+: Advanced Maturity Damping + Dynamic Staking + Real Circulating Supply + Price Velocity
 """
 
 import json
@@ -11,8 +11,8 @@ from dataclasses import dataclass, asdict
 from typing import Dict, List, Tuple, Optional
 
 @dataclass
-class EnhancedNXIDConfig:
-    """🔧 Enhanced NXID Tokenomics Configuration  - Advanced Maturity + Dynamic Systems"""
+class NXIDConfig:
+    """🔧  NXID Tokenomics Configuration  - Advanced Maturity + Dynamic Systems"""
     
     # === TEMEL TOKEN PARAMETRELERİ ===
     total_supply: float = 100_000_000_000.0  # 100B NXID
@@ -55,7 +55,7 @@ class EnhancedNXIDConfig:
     # === YENİ: STARTING MCAP INPUT  ===
     starting_mcap_usdt: float = 8_000_000.0  # User input starting McAp
     
-    # === ENHANCED MATURITY DAMPING SYSTEM  ===
+    # ===  MATURITY DAMPING SYSTEM  ===
     maturity_target_mcap: float = 1_000_000_000.0  # Target McAp for convergence
     maturity_damping_strength: float = 0.4     # Damping kuvveti (0-1)
     maturity_convergence_speed: float = 0.15   # YENİ: Yakınsama hızı
@@ -64,13 +64,13 @@ class EnhancedNXIDConfig:
     enable_maturity_damping: bool = True       # Maturity damping aktif
     enable_maturity_analysis: bool = True      # YENİ: Maturity analizi aktif
     
-    # === ENHANCED DYNAMIC STAKING SYSTEM  ===
+    # ===  DYNAMIC STAKING SYSTEM  ===
     # Staking Participation Range
     base_staking_rate: float = 0.45           # Temel staking oranı (fiyat etkisi olmadan)
     min_staking_rate: float = 0.15            # Minimum staking oranı
     max_staking_rate: float = 0.75            # Maximum staking oranı
     
-    # Enhanced Price Velocity System 
+    #  Price Velocity System 
     price_velocity_impact: float = -0.6       # Fiyat hızının staking'e etkisi
     price_velocity_window: int = 7            # Fiyat hızı hesaplama penceresi (gün)
     price_velocity_smoothing: float = 0.3     # Fiyat hızı smoothing faktörü
@@ -81,7 +81,7 @@ class EnhancedNXIDConfig:
     staking_exit_speed: float = 0.005         # Staking çıkış hızı (daha hızlı)
     staking_transition_smoothness: float = 0.12  # Geçiş yumuşaklığı
     
-    # === ENHANCED DYNAMIC APY SYSTEM  ===
+    # ===  DYNAMIC APY SYSTEM  ===
     staking_pool_duration_years: int = 8     # Staking pool süresi
     base_staking_apy: float = 85.0           # Temel staking APY
     min_staking_apy: float = 15.0            # Minimum staking APY
@@ -98,7 +98,7 @@ class EnhancedNXIDConfig:
     speculative_ratio: float = 0.6           # Spekülasyon oranı
     fundamental_growth_rate: float = 0.015   # Aylık temelli büyüme
     
-    # Enhanced smoothing parameters
+    #  smoothing parameters
     price_smoothing_factor: float = 0.15     # Fiyat smoothing
     mcap_smoothing_factor: float = 0.12      # McAp smoothing
     volatility_damping: float = 0.7          # Volatilite azaltma
@@ -122,7 +122,26 @@ class EnhancedNXIDConfig:
     marketing_cliff_months: int = 0          # Marketing cliff
     marketing_vesting_months: int = 12       # Marketing vesting
     
-    # === 16 ÇEYREK MAINNET SİSTEMİ ===
+    # === YENİ: KULLANICI TANINLANIR ÇEYREK DEĞİŞİM ORANLARI ===
+    # Bear Scenario Çeyreklik Değişim Parametreleri
+    bear_quarterly_base_multiplier: float = 0.8      # Bear başlangıç çarpanı
+    bear_quarterly_change_rate: float = 0.05         # Çeyreklik değişim oranı
+    bear_recovery_start_quarter: int = 8             # Toparlanma başlangıç çeyreği
+    bear_recovery_rate: float = 0.08                 # Toparlanma oranı
+    
+    # Base Scenario Çeyreklik Değişim Parametreleri  
+    base_quarterly_base_multiplier: float = 1.0      # Base başlangıç çarpanı
+    base_quarterly_change_rate: float = 0.03         # Çeyreklik değişim oranı
+    base_volatility_amplitude: float = 0.1           # Dalgalanma genliği
+    base_growth_trend: float = 0.02                  # Genel büyüme trendi
+    
+    # Bull Scenario Çeyreklik Değişim Parametreleri
+    bull_quarterly_base_multiplier: float = 1.5      # Bull başlangıç çarpanı  
+    bull_quarterly_change_rate: float = 0.08         # Çeyreklik değişim oranı
+    bull_euphoria_start_quarter: int = 12            # Euphoria başlangıç çeyreği
+    bull_correction_start_quarter: int = 18          # Düzeltme başlangıç çeyreği
+    
+    # === 5 YILLIK DÖNGÜSEL ÇEYREK SİSTEMİ ===
     bear_scenario_multipliers: List[float] = None  
     base_scenario_multipliers: List[float] = None  
     bull_scenario_multipliers: List[float] = None  
@@ -153,35 +172,105 @@ class EnhancedNXIDConfig:
     max_investment_usdt: float = 10000.0
     
     def __post_init__(self):
-        """Default değerleri ayarla - 16 çeyrek için + Enhanced """
-        if self.bear_scenario_multipliers is None:
-            self.bear_scenario_multipliers = [
-                0.7, 0.8, 0.75, 0.85,  # Yıl 1
-                0.8, 0.9, 0.85, 0.95,  # Yıl 2  
-                0.9, 1.0, 0.95, 1.05,  # Yıl 3
-                1.0, 1.1, 1.05, 1.15   # Yıl 4
-            ]
-        if self.base_scenario_multipliers is None:
-            self.base_scenario_multipliers = [
-                1.0, 1.05, 1.1, 1.15,  # Yıl 1
-                1.1, 1.2, 1.15, 1.25,  # Yıl 2
-                1.2, 1.3, 1.25, 1.35,  # Yıl 3  
-                1.3, 1.4, 1.35, 1.45   # Yıl 4
-            ]
-        if self.bull_scenario_multipliers is None:
-            self.bull_scenario_multipliers = [
-                1.5, 1.8, 1.6, 1.9,    # Yıl 1
-                1.7, 2.0, 1.8, 2.1,    # Yıl 2
-                1.9, 2.2, 2.0, 2.3,    # Yıl 3
-                2.1, 2.4, 2.2, 2.5     # Yıl 4
-            ]
-        if self.market_beta_per_quarter is None:
-            self.market_beta_per_quarter = [
-                1.1, 1.0, 1.05, 0.95,  # Yıl 1
-                1.0, 0.95, 1.0, 0.9,   # Yıl 2 
-                0.95, 0.9, 0.95, 0.85, # Yıl 3 
-                0.9, 0.85, 0.9, 0.8    # Yıl 4
-            ]
+        self._generate_dynamic_quarterly_multipliers()
+        
+        # Market beta'yı da dinamik olarak hesapla
+        self._generate_dynamic_market_beta()
+
+    def _generate_dynamic_market_beta(self):
+        """Market beta'yı dinamik olarak hesapla"""
+        self.market_beta_per_quarter = []
+        base_beta = 1.0
+        
+        for quarter in range(20):
+            # Çeyrek pozisyonuna göre volatilite 
+            cycle_position = quarter % 5
+            if cycle_position in [0, 4]:  # Cycle başı ve sonu - yüksek volatilite
+                beta = base_beta + 0.3
+            elif cycle_position in [1, 3]:  # Geçiş dönemleri
+                beta = base_beta + 0.1  
+            else:  # Cycle ortası - düşük volatilite
+                beta = base_beta - 0.1
+            
+            self.market_beta_per_quarter.append(round(beta, 2))
+        
+    def _generate_dynamic_quarterly_multipliers(self):
+        """Kullanıcı ayarlarına göre 20 çeyreklik multiplier dizilerini oluştur"""
+        import math
+        
+        # === BEAR SCENARIO DİNAMİK HESAPLAMA ===
+        self.bear_scenario_multipliers = []
+        for quarter in range(20):
+            if quarter < self.bear_recovery_start_quarter:
+                # Düşüş dönemi
+                multiplier = (self.bear_quarterly_base_multiplier * 
+                            (1 - self.bear_quarterly_change_rate) ** quarter)
+                # Minimum değer koruması
+                multiplier = max(0.5, multiplier)
+            else:
+                # Toparlanma dönemi
+                recovery_quarters = quarter - self.bear_recovery_start_quarter
+                multiplier = (self.bear_quarterly_base_multiplier * 
+                            (1 + self.bear_recovery_rate) ** recovery_quarters)
+                # Maksimum değer koruması  
+                multiplier = min(1.2, multiplier)
+            
+            self.bear_scenario_multipliers.append(round(multiplier, 2))
+        
+        # === BASE SCENARIO DİNAMİK HESAPLAMA ===
+        self.base_scenario_multipliers = []
+        for quarter in range(20):
+            # Sinüzoidal dalgalanma + genel büyüme trendi
+            wave_effect = math.sin(quarter * math.pi / 10) * self.base_volatility_amplitude
+            trend_effect = quarter * self.base_growth_trend
+            change_effect = (1 + self.base_quarterly_change_rate) ** (quarter % 5)
+            
+            multiplier = (self.base_quarterly_base_multiplier + 
+                        wave_effect + trend_effect) * change_effect
+            
+            # Reasonable bounds
+            multiplier = max(0.8, min(1.6, multiplier))
+            self.base_scenario_multipliers.append(round(multiplier, 2))
+        
+        # === BULL SCENARIO DİNAMİK HESAPLAMA ===
+        self.bull_scenario_multipliers = []
+        for quarter in range(20):
+            if quarter < self.bull_euphoria_start_quarter:
+                # Normal büyüme dönemi
+                multiplier = (self.bull_quarterly_base_multiplier * 
+                            (1 + self.bull_quarterly_change_rate) ** quarter)
+            elif quarter < self.bull_correction_start_quarter:
+                # Euphoria dönemi - hızlanmış büyüme
+                euphoria_quarters = quarter - self.bull_euphoria_start_quarter
+                multiplier = (self.bull_quarterly_base_multiplier * 
+                            (1 + self.bull_quarterly_change_rate * 1.5) ** quarter)
+            else:
+                # Düzeltme dönemi
+                correction_quarters = quarter - self.bull_correction_start_quarter
+                multiplier = (self.bull_quarterly_base_multiplier * 
+                            (1 + self.bull_quarterly_change_rate) ** quarter * 
+                            (1 - correction_quarters * 0.05))
+            
+            # Bull için geniş aralık
+            multiplier = max(1.2, min(2.8, multiplier))
+            self.bull_scenario_multipliers.append(round(multiplier, 2))
+        
+    def get_cyclical_multiplier(self, quarter_number: int, scenario: str) -> float:
+        """5 yıllık döngüsel çeyrek sisteminden multiplier al"""
+        # 20 çeyreklik döngü (5 yıl x 4 çeyrek)
+        cycle_position = quarter_number % 20
+        
+        if scenario == "bear":
+            return self.bear_scenario_multipliers[cycle_position]
+        elif scenario == "bull":
+            return self.bull_scenario_multipliers[cycle_position]
+        else:  # base
+            return self.base_scenario_multipliers[cycle_position]
+    
+    def get_cyclical_beta(self, quarter_number: int) -> float:
+        """5 yıllık döngüsel beta sisteminden beta al"""
+        cycle_position = quarter_number % 20
+        return self.market_beta_per_quarter[cycle_position]
     
     def validate_distribution(self) -> bool:
         """Token dağıtımının %100'e eşit olduğunu doğrula"""
@@ -189,13 +278,30 @@ class EnhancedNXIDConfig:
                 self.dao_treasury + self.marketing + self.liquidity + self.presale_allocation)
         return abs(total - 100.0) < 0.01
     
+    def auto_balance_distribution(self) -> None:
+        """Token dağıtımını otomatik olarak %100'e tamamla"""
+        total = (self.team_allocation + self.presale_staking_pool + self.market_staking_pool +
+                self.dao_treasury + self.marketing + self.liquidity + self.presale_allocation)
+        
+        if abs(total - 100.0) >= 0.01:
+            # Farkı presale allocation'dan ayarla (en büyük bileşen genellikle)
+            difference = 100.0 - total
+            self.presale_allocation = max(0, self.presale_allocation + difference)
+    
     def validate_tax_distribution(self) -> bool:
         """Tax dağıtımının %100'e eşit olduğunu doğrula"""
         total = self.tax_to_staking_percentage + self.tax_to_burn_percentage
         return abs(total - 100.0) < 0.01
     
-    def validate_enhanced_parameters(self) -> bool:
-        """Enhanced  parametrelerini doğrula"""
+    def auto_balance_tax_distribution(self) -> None:
+        """Tax dağıtımını otomatik olarak %100'e tamamla"""
+        total = self.tax_to_staking_percentage + self.tax_to_burn_percentage
+        if abs(total - 100.0) >= 0.01:
+            difference = 100.0 - total
+            self.tax_to_burn_percentage = max(0, self.tax_to_burn_percentage + difference)
+    
+    def validate__parameters(self) -> bool:
+        """  parametrelerini doğrula"""
         # Starting McAp validation
         if self.starting_mcap_usdt <= 0:
             return False
@@ -204,16 +310,12 @@ class EnhancedNXIDConfig:
         if self.maturity_target_mcap <= self.starting_mcap_usdt:
             return False
         
-        # Staking range validation
-        if not (0 <= self.min_staking_rate <= self.base_staking_rate <= self.max_staking_rate <= 1):
+        # Staking range validation - SINIRLAMA KALDIRILDI
+        if not (0 <= self.min_staking_rate <= self.max_staking_rate <= 10):  # Genişletildi
             return False
         
-        # APY range validation
-        if not (0 <= self.min_staking_apy <= self.base_staking_apy <= self.max_staking_apy):
-            return False
-        
-        # Damping parameters validation
-        if not (0 <= self.maturity_damping_strength <= 1):
+        # APY range validation - SINIRLAMA KALDIRILDI
+        if not (0 <= self.min_staking_apy <= self.max_staking_apy):  # Sınır kaldırıldı
             return False
         
         return True
@@ -232,7 +334,7 @@ class EnhancedNXIDConfig:
         }
     
     def get_staking_params(self) -> dict:
-        """Enhanced Staking parametrelerini döndür """
+        """ Staking parametrelerini döndür """
         return {
             "base_rate": self.base_staking_rate,
             "min_rate": self.min_staking_rate,
@@ -247,7 +349,7 @@ class EnhancedNXIDConfig:
         }
     
     def get_apy_params(self) -> dict:
-        """Enhanced APY parametrelerini döndür """
+        """ APY parametrelerini döndür """
         return {
             "duration_years": self.staking_pool_duration_years,
             "base_apy": self.base_staking_apy,
@@ -269,7 +371,7 @@ class EnhancedNXIDConfig:
         filtered_data = {k: v for k, v in data.items() if k in valid_fields}
         return cls(**filtered_data)
     
-    def save_to_json(self, filename: str = "nxid_config_enhanced_v6.json"):
+    def save_to_json(self, filename: str = "nxid_config__v6.json"):
         """Config'i JSON dosyasına kaydet"""
         try:
             with open(filename, 'w', encoding='utf-8') as f:
@@ -280,40 +382,60 @@ class EnhancedNXIDConfig:
             return False
     
     @classmethod
-    def load_from_json(cls, filename: str = "nxid_config_enhanced_v6.json"):
-        """JSON dosyasından config yükle"""
+    def load_from_json(cls, filename: str = "default.json"):
+        """🎯 JSON dosyasından config yükle - default.json ÖNCELİKLİ"""
         try:
-            if os.path.exists(filename):
+            # 🎯 1. ÖNCELİK: default.json dosyasını ara
+            if os.path.exists("default.json"):
+                with open("default.json", 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                st.success("✅ Default config (default.json) başarıyla yüklendi!")
+                return cls.from_dict(data)
+            
+            # 🎯 2. ÖNCELİK: Kullanıcının belirttiği dosya
+            if filename != "default.json" and os.path.exists(filename):
                 with open(filename, 'r', encoding='utf-8') as f:
                     data = json.load(f)
+                st.info(f"📄 User config yüklendi: {filename}")
                 return cls.from_dict(data)
-            else:
-                # Fallback to older versions
-                fallback_files = ["nxid_config_enhanced_v5.json", "nxid_config_enhanced_v46.json", "nxid_config.json"]
-                for fallback in fallback_files:
-                    if os.path.exists(fallback):
-                        with open(fallback, 'r', encoding='utf-8') as f:
-                            data = json.load(f)
-                        return cls.from_dict(data)
-                
-                st.info(f"Config dosyası bulunamadı ({filename}), default enhanced config  kullanılıyor.")
-                return cls()
+            
+            # 🎯 3. ÖNCELİK: Fallback config dosyaları
+            fallback_files = [
+                "nxid_config__v6.json",
+                "nxid_config__v5.json", 
+                "nxid_config__v46.json", 
+                "nxid_config.json"
+            ]
+            
+            for fallback in fallback_files:
+                if os.path.exists(fallback):
+                    with open(fallback, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                    st.warning(f"⚠️ Fallback config yüklendi: {fallback}")
+                    return cls.from_dict(data)
+            
+            # 🎯 4. SON ÇARE: Default class değerleri
+            st.info("🔧 Hiç config dosyası bulunamadı, default class değerleri kullanılıyor.")
+            return cls()
+            
         except Exception as e:
-            st.warning(f"Config yükleme hatası: {e}. Default enhanced config  kullanılıyor.")
+            st.error(f"❌ Config yükleme hatası: {e}")
+            st.info("🔧 Default class değerleri kullanılıyor.")
             return cls()
     
     def get_system_info(self) -> dict:
-        """Enhanced sistem bilgilerini döndür """
+        """ sistem bilgilerini döndür """
         return {
             "version": "6.0",
             "features": [
+                " Cyclical Quarters",
                 "Advanced Maturity Damping",
-                "Enhanced Dynamic Staking",
+                " Dynamic Staking",
                 "Price Velocity Impact",
-                "Real Circulating Supply",
-                "Dynamic APY with Pool Release"
+                "Real Circulating Supply"
             ],
             "calculation_method": self.interest_calculation_method,
             "starting_mcap": self.starting_mcap_usdt,
-            "maturity_target": self.maturity_target_mcap
+            "maturity_target": self.maturity_target_mcap,
+            "cycle_length": "5 years (20 quarters)"
         }

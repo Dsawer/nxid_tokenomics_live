@@ -99,7 +99,7 @@ def launch_gui():
 
 def main():
     """Ana fonksiyon"""
-    print("🎯 NXID Enhanced Tokenomics - GUI EXE Builder")
+    print("🎯 NXID  Tokenomics - GUI EXE Builder")
     print("=" * 50)
     
     # Auto-py-to-exe yükle

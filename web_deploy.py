@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-NXID Enhanced Tokenomics - Web Deployment Helper (FIXED)
+NXID  Tokenomics - Web Deployment Helper (FIXED)
 =======================================================
 Python olmayan bilgisayarlar için web deployment - Unicode hatası düzeltildi
 """
@@ -68,7 +68,7 @@ gatherUsageStats = false
         """Web deployment için requirements.txt"""
         print("📦 Creating web requirements.txt...")
         
-        web_requirements = """# NXID Enhanced Tokenomics - Web Deployment Requirements
+        web_requirements = """# NXID  Tokenomics - Web Deployment Requirements
 streamlit>=1.33,<1.36
 pandas>=2.2,<2.3
 numpy>=2.0,<2.2
@@ -89,7 +89,7 @@ streamlit-aggrid>=0.3.0
         """Docker deployment için Dockerfile"""
         print("🐳 Creating Dockerfile...")
         
-        dockerfile_content = """# NXID Enhanced Tokenomics - Docker Image
+        dockerfile_content = """# NXID  Tokenomics - Docker Image
 FROM python:3.11-slim
 
 # Working directory
@@ -171,7 +171,7 @@ build/
 services:
   nxid-tokenomics:
     build: .
-    container_name: nxid-enhanced-tokenomics
+    container_name: nxid--tokenomics
     ports:
       - "8501:8501"
     environment:
@@ -222,10 +222,10 @@ services:
         
         # app.json
         app_json = """{
-  "name": "NXID Enhanced Tokenomics",
+  "name": "NXID  Tokenomics",
   "description": "Professional cryptocurrency tokenomics analysis platform",
   "image": "heroku/python",
-  "repository": "https://github.com/your-username/nxid-enhanced-tokenomics",
+  "repository": "https://github.com/your-username/nxid--tokenomics",
   "keywords": ["streamlit", "cryptocurrency", "tokenomics", "analysis"],
   "env": {
     "STREAMLIT_SERVER_HEADLESS": {
@@ -274,7 +274,7 @@ services:
         """Deployment guide oluştur - ASCII karakterler ile"""
         print("📖 Creating deployment guide...")
         
-        guide_content = """# NXID Enhanced Tokenomics - Web Deployment Guide
+        guide_content = """# NXID  Tokenomics - Web Deployment Guide
 
 ## Deployment Options
 
@@ -283,7 +283,7 @@ services:
 1. **GitHub'a push et:**
    ```bash
    git add .
-   git commit -m "NXID Enhanced Tokenomics"
+   git commit -m "NXID  Tokenomics"
    git push origin main
    ```
 
@@ -434,7 +434,7 @@ Deploy ettikten sonra link'i herkesle paylas!
 
 def main():
     """Ana fonksiyon"""
-    print("🌐 NXID Enhanced Tokenomics - Web Deployment Helper")
+    print("🌐 NXID  Tokenomics - Web Deployment Helper")
     print("=" * 52)
     
     deployer = WebDeploymentHelper()

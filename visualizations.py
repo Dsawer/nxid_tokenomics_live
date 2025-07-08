@@ -1,5 +1,5 @@
 """
-NXID Enhanced Visualizations Module 
+NXID  Visualizations Module 
 =========================================
 Simplified Maturity + New Charts + Reduced Volatility + Turkish Sidebar
 """
@@ -11,31 +11,31 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 from typing import Dict, List, Tuple
 from utils import NXID_COLORS, hex_to_rgb, get_chart_template, display_nxid_logo
-from config import EnhancedNXIDConfig
+from config import NXIDConfig
 import base64
 import os
 
-class EnhancedVisualizationManager:
-    """Enhanced Görselleştirme Yöneticisi  - New Charts + Simplified"""
+class VisualizationManager:
+    """ Görselleştirme Yöneticisi  - New Charts + Simplified"""
     
-    def __init__(self, config: EnhancedNXIDConfig):
+    def __init__(self, config: NXIDConfig):
         self.config = config
         self.chart_template = get_chart_template()
     
-    def create_enhanced_visualizations_v4(self, presale_df: pd.DataFrame, 
+    def create__visualizations_v4(self, presale_df: pd.DataFrame, 
                                         weekly_df: pd.DataFrame,
                                         vesting_df: pd.DataFrame,
                                         mainnet_df: pd.DataFrame,
                                         scenario: str) -> Dict[str, go.Figure]:
-        """Enhanced Görselleştirmeler  - New Charts + Simplified Maturity"""
+        """ Görselleştirmeler  - New Charts + Simplified Maturity"""
         
         charts = {}
         
         # 1. Token dağılımı (logo ile)
-        charts['distribution'] = self._create_enhanced_distribution_pie_chart_with_logo()
+        charts['distribution'] = self._create__distribution_pie_chart_with_logo()
         
-        # 2. Enhanced vesting programı (staking pools ile)
-        charts['vesting'] = self._create_enhanced_vesting_schedule_chart(vesting_df)
+        # 2.  vesting programı (staking pools ile)
+        charts['vesting'] = self._create__vesting_schedule_chart(vesting_df)
         
         # 3. Presale temel analiz
         charts['presale_basic'] = self._create_presale_basic_chart(presale_df)
@@ -62,11 +62,11 @@ class EnhancedVisualizationManager:
         # 10. YENİ: Circulating Supply Analysis
         charts['circulating_supply'] = self._create_circulating_supply_analysis_chart(mainnet_df, vesting_df)
         
-        # 11. Enhanced mainnet market (simplified)
-        charts['mainnet_market'] = self._create_enhanced_smooth_mainnet_market_chart(mainnet_df, scenario)
+        # 11.  mainnet market (simplified)
+        charts['mainnet_market'] = self._create__smooth_mainnet_market_chart(mainnet_df, scenario)
         
-        # 12. Enhanced mainnet staking
-        charts['mainnet_staking'] = self._create_enhanced_mainnet_staking_chart(mainnet_df)
+        # 12.  mainnet staking
+        charts['mainnet_staking'] = self._create__mainnet_staking_chart(mainnet_df)
         
         # 13. YENİ: Simplified Maturity Analysis Chart
         if self.config.enable_maturity_damping and self.config.enable_maturity_analysis:
@@ -77,8 +77,8 @@ class EnhancedVisualizationManager:
         
         return charts
     
-    def _create_enhanced_distribution_pie_chart_with_logo(self) -> go.Figure:
-        """Token dağılımı - NXID logo ile enhanced"""
+    def _create__distribution_pie_chart_with_logo(self) -> go.Figure:
+        """Token dağılımı - NXID logo ile """
         labels = ['Presale Tahsisi', 'Market Staking Havuzu', 'Team', 'DAO Hazinesi', 
                  'Pazarlama', 'Likidite', 'Presale Staking Havuzu']
         values = [
@@ -492,8 +492,8 @@ class EnhancedVisualizationManager:
         fig.update_layout(**template_config)
         return fig
     
-    def _create_enhanced_vesting_schedule_chart(self, vesting_df: pd.DataFrame) -> go.Figure:
-        """Enhanced vesting programı - staking pools dahil"""
+    def _create__vesting_schedule_chart(self, vesting_df: pd.DataFrame) -> go.Figure:
+        """ vesting programı - staking pools dahil"""
         fig = make_subplots(
             rows=2, cols=1,
             subplot_titles=['Token Release Schedule (Including Staking Pools)', 
@@ -622,7 +622,7 @@ class EnhancedVisualizationManager:
         
         template_config = self.chart_template.copy()
         template_config.update({
-            'title': dict(text='<b>Enhanced Token Release Program </b>', x=0.5,
+            'title': dict(text='<b> Token Release Program </b>', x=0.5,
                         font=dict(size=26, color=NXID_COLORS['primary'])),
             'height': 750,
             'hovermode': 'x unified'
@@ -631,8 +631,8 @@ class EnhancedVisualizationManager:
         fig.update_layout(**template_config)
         return fig
     
-    def _create_enhanced_smooth_mainnet_market_chart(self, mainnet_df: pd.DataFrame, scenario: str) -> go.Figure:
-        """Enhanced smooth mainnet market chart + simplified maturity"""
+    def _create__smooth_mainnet_market_chart(self, mainnet_df: pd.DataFrame, scenario: str) -> go.Figure:
+        """ smooth mainnet market chart + simplified maturity"""
         scenario_color = NXID_COLORS['danger'] if scenario == 'bear' else (
             NXID_COLORS['success'] if scenario == 'bull' else NXID_COLORS['primary']
         )
@@ -640,7 +640,7 @@ class EnhancedVisualizationManager:
         fig = make_subplots(
             rows=3, cols=1,
             subplot_titles=[f'Smooth Token Fiyat - {scenario.upper()} + Simplified Maturity', 
-                           f'Enhanced Market Dynamics - 16 Çeyrek',
+                           f' Market Dynamics - 16 Çeyrek',
                            'Volatilite ve Smooth Faktörleri (Reduced)'],
             specs=[[{"secondary_y": True}], [{"secondary_y": True}], [{"secondary_y": True}]],
             vertical_spacing=0.12
@@ -744,7 +744,7 @@ class EnhancedVisualizationManager:
         
         template_config = self.chart_template.copy()
         template_config.update({
-            'title': dict(text=f'<b>Enhanced Smooth Mainnet + Simplified Maturity - {scenario.upper()}</b>', x=0.5,
+            'title': dict(text=f'<b> Smooth Mainnet + Simplified Maturity - {scenario.upper()}</b>', x=0.5,
                         font=dict(size=24, color=scenario_color)),
             'height': 900,
             'hovermode': 'x unified'
@@ -753,12 +753,12 @@ class EnhancedVisualizationManager:
         fig.update_layout(**template_config)
         return fig
     
-    def _create_enhanced_mainnet_staking_chart(self, mainnet_df: pd.DataFrame) -> go.Figure:
-        """Enhanced mainnet staking chart - smooth ile"""
+    def _create__mainnet_staking_chart(self, mainnet_df: pd.DataFrame) -> go.Figure:
+        """ mainnet staking chart - smooth ile"""
         fig = make_subplots(
             rows=2, cols=1,
             subplot_titles=['Smooth Price-Sensitive Staking Dynamics', 
-                           'Enhanced Staking Rewards ve APY Evolution'],
+                           ' Staking Rewards ve APY Evolution'],
             specs=[[{"secondary_y": True}], [{"secondary_y": True}]],
             vertical_spacing=0.15
         )
@@ -839,7 +839,7 @@ class EnhancedVisualizationManager:
         
         template_config = self.chart_template.copy()
         template_config.update({
-            'title': dict(text='<b>Enhanced Smooth Mainnet Staking Ecosystem</b>', x=0.5,
+            'title': dict(text='<b> Smooth Mainnet Staking Ecosystem</b>', x=0.5,
                         font=dict(size=24, color=NXID_COLORS['primary'])),
             'height': 750,
             'hovermode': 'x unified'
@@ -934,7 +934,7 @@ class EnhancedVisualizationManager:
         return fig
     
     def _create_presale_apy_staking_analysis(self, presale_df: pd.DataFrame) -> go.Figure:
-        """APY + Staking analizi - Enhanced """
+        """APY + Staking analizi -  """
         fig = make_subplots(
             rows=3, cols=1,
             subplot_titles=['Dynamic APY Performance', 
@@ -1018,7 +1018,7 @@ class EnhancedVisualizationManager:
         return fig
     
     def _create_weekly_daily_interest_tracking(self, weekly_df: pd.DataFrame, presale_df: pd.DataFrame) -> go.Figure:
-        """Haftalık tracking - Enhanced """
+        """Haftalık tracking -  """
         
         # Haftalık tracking logic
         daily_tracking_data = []
@@ -1178,7 +1178,7 @@ class EnhancedVisualizationManager:
         return fig
     
     def _create_mainnet_tax_burn_chart(self, mainnet_df: pd.DataFrame) -> go.Figure:
-        """Tax & burn chart - Enhanced """
+        """Tax & burn chart -  """
         fig = make_subplots(
             rows=2, cols=1,
             subplot_titles=['Tax Collection and Distribution', 

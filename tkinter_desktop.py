@@ -39,7 +39,7 @@ class NXIDDesktopApp:
         
     def setup_window(self):
         """Pencere ayarları"""
-        self.root.title("NXID Enhanced Tokenomics Desktop")
+        self.root.title("NXID  Tokenomics Desktop")
         self.root.geometry("1200x800")
         self.root.minsize(1000, 600)
         
@@ -72,7 +72,7 @@ class NXIDDesktopApp:
         
         # Başlık - Emoji kaldırıldı
         title_label = ttk.Label(main_frame, 
-                               text="NXID Enhanced Tokenomics", 
+                               text="NXID  Tokenomics", 
                                style='Title.TLabel')
         title_label.pack(pady=(0, 20))
         
@@ -128,7 +128,7 @@ class NXIDDesktopApp:
         
         # İlk mesaj - Emoji kaldırıldı
         self.web_content.insert('1.0', '''
-NXID Enhanced Tokenomics Desktop Uygulaması
+NXID  Tokenomics Desktop Uygulaması
 
 Özellikler:
 • Simple Interest Presale System
@@ -136,7 +136,7 @@ NXID Enhanced Tokenomics Desktop Uygulaması
 • Dynamic Staking with Price Velocity
 • Real Circulating Supply Calculations
 • 16-Quarter Scenario Analysis
-• Enhanced Visualizations
+•  Visualizations
 
 Kullanım:
 1. "Uygulamayı Başlat" butonuna tıklayın
@@ -218,7 +218,7 @@ Durum: Hazır - Başlatmak için butona tıklayın
         self.web_content.config(state='normal')
         self.web_content.delete('1.0', 'end')
         self.web_content.insert('1.0', f'''
-SUCCESS: NXID Enhanced Tokenomics Başarıyla Başlatıldı!
+SUCCESS: NXID  Tokenomics Başarıyla Başlatıldı!
 
 URL: {self.url}
 Durum: Aktif ve çalışıyor
@@ -234,7 +234,7 @@ NXID Tokenomics şu anda çalışıyor ve kullanıma hazır!
 Tarayıcınızdaki sekmede:
 • Sol panelden parametreleri ayarlayın
 • Scenario seçin (Bear/Base/Bull)
-• "Enhanced NXID Tokenomics Launch" butonuna tıklayın
+• " NXID Tokenomics Launch" butonuna tıklayın
 • Sonuçları analiz edin
 ''')
         self.web_content.config(state='disabled')
@@ -295,7 +295,7 @@ Tekrar başlatmaya hazır
 
 def main():
     """Ana fonksiyon"""
-    print("NXID Enhanced Tokenomics Desktop (Tkinter)")
+    print("NXID  Tokenomics Desktop (Tkinter)")
     print("===========================================")
     
     try:

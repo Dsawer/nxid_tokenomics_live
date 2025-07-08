@@ -1,4 +1,4 @@
-# NXID Enhanced Tokenomics - Streamlit Cloud Compatible Requirements
+# NXID  Tokenomics - Streamlit Cloud Compatible Requirements
 streamlit>=1.33,<1.36
 pandas>=1.5,<2.3
 numpy>=1.19.3,<2.0

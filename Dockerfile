@@ -1,4 +1,4 @@
-# NXID Enhanced Tokenomics - Docker Image
+# NXID  Tokenomics - Docker Image
 FROM python:3.11-slim
 
 # Working directory

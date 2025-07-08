@@ -1,5 +1,5 @@
 """
-NXID Enhanced Analytics and Reporting Module 
+NXID  Analytics and Reporting Module 
 =================================================
 Advanced Maturity Damping + Dynamic Staking + Price Velocity + Real Circulating Supply Analytics
 """
@@ -9,12 +9,12 @@ import streamlit as st
 import json
 from typing import Dict, List, Tuple
 from utils import NXID_COLORS, create_metric_card, format_number
-from config import EnhancedNXIDConfig
+from config import NXIDConfig
 
 class AnalyticsManager:
-    """📊 Enhanced Analytics Manager  - Advanced Maturity + Dynamic Systems"""
+    """📊  Analytics Manager  - Advanced Maturity + Dynamic Systems"""
     
-    def __init__(self, config: EnhancedNXIDConfig):
+    def __init__(self, config: NXIDConfig):
         self.config = config
     
     def display_executive_dashboard_v6(self, metrics: Dict, scenario: str):
@@ -25,7 +25,7 @@ class AnalyticsManager:
             NXID_COLORS['success'] if scenario == 'bull' else NXID_COLORS['primary']
         )
         
-        # === ENHANCED TOP-LEVEL METRICS  ===
+        # ===  TOP-LEVEL METRICS  ===
         st.markdown("### 🎯 Key Performance Indicators ")
         
         col1, col2, col3, col4, col5, col6 = st.columns(6)
@@ -78,7 +78,7 @@ class AnalyticsManager:
                 NXID_COLORS['burn']
             ), unsafe_allow_html=True)
         
-        # === ENHANCED  ADVANCED FEATURES SECTION ===
+        # ===   ADVANCED FEATURES SECTION ===
         st.markdown("### 🚀 Advanced Features Dashboard ")
         
         col1, col2, col3, col4 = st.columns(4)
@@ -131,11 +131,11 @@ class AnalyticsManager:
                 NXID_COLORS['success']
             ), unsafe_allow_html=True)
         
-        # === ENHANCED PERFORMANCE ASSESSMENT  ===
-        self._display_enhanced_performance_assessment(metrics, scenario, avg_user_peak_roi, max_progress if metrics['mainnet']['maturity_damping_aktif'] else 0)
+        # ===  PERFORMANCE ASSESSMENT  ===
+        self._display__performance_assessment(metrics, scenario, avg_user_peak_roi, max_progress if metrics['mainnet']['maturity_damping_aktif'] else 0)
     
-    def _display_enhanced_performance_assessment(self, metrics: Dict, scenario: str, avg_user_peak_roi: float, maturity_progress: float):
-        """Enhanced performance assessment with  features"""
+    def _display__performance_assessment(self, metrics: Dict, scenario: str, avg_user_peak_roi: float, maturity_progress: float):
+        """ performance assessment with  features"""
         
         # Advanced scoring criteria
         advanced_score = 0
@@ -244,7 +244,7 @@ class AnalyticsManager:
             st.markdown(f"**🔥 Burn:** {burn_percentage:.2f}% supply")
     
     def display_comprehensive_analytics_report_v6(self, metrics: Dict, scenario: str):
-        """📊 Comprehensive Enhanced Analytics Report """
+        """📊 Comprehensive  Analytics Report """
         st.markdown('''
         <h2 style="font-family: Orbitron, monospace; font-size: 2.2rem; font-weight: 700; 
                    color: #1B8EF2; margin: 2.5rem 0 1.5rem 0; padding: 1rem 0 0.5rem 0; 
@@ -368,7 +368,7 @@ class AnalyticsManager:
             """)
         
     def _display_dynamic_staking_analytics_v6(self, metrics: Dict):
-        """⚡ Enhanced Dynamic Staking Analytics """
+        """⚡  Dynamic Staking Analytics """
         st.markdown("### ⚡ Dinamik Staking")
         
         col1, col2 = st.columns(2)
@@ -539,8 +539,8 @@ class AnalyticsManager:
             st.markdown("📊 **Stable Periods**: Low velocity maintained consistent staking rates")
     
     def _display_mainnet_analytics_v6(self, metrics: Dict, scenario: str):
-        """🚀 Enhanced Mainnet Analytics """
-        st.markdown(f"### 🚀 Enhanced Mainnet Analysis  - {scenario.upper()} Scenario")
+        """🚀  Mainnet Analytics """
+        st.markdown(f"### 🚀  Mainnet Analysis  - {scenario.upper()} Scenario")
         
         scenario_color = NXID_COLORS['danger'] if scenario == 'bear' else (
             NXID_COLORS['success'] if scenario == 'bull' else NXID_COLORS['primary']
@@ -548,7 +548,7 @@ class AnalyticsManager:
         
         col1, col2 = st.columns(2)
         with col1:
-            st.markdown(f"#### 🚀 Enhanced {scenario.upper()} Market Performance")
+            st.markdown(f"#### 🚀  {scenario.upper()} Market Performance")
             st.write(f"- **Starting Market Cap**: ${metrics['mainnet']['starting_mcap']/1e6:.1f}M")
             st.write(f"- **Launch Market Cap**: ${metrics['mainnet']['launch_mcap']/1e6:.1f}M")
             st.write(f"- **Peak Market Cap**: ${metrics['mainnet']['max_mcap']/1e6:.1f}M")
@@ -558,7 +558,7 @@ class AnalyticsManager:
             st.write(f"- **Final Price**: ${metrics['mainnet']['final_token_fiyati']:.4f}")
             
         with col2:
-            st.markdown("#### 💎 Enhanced Supply & Price Dynamics ")
+            st.markdown("#### 💎  Supply & Price Dynamics ")
             st.write(f"- **Final Gross Circulating**: {metrics['mainnet']['final_dolasim_arzi']/1e9:.1f}B")
             st.write(f"- **Final Effective Circulating**: {metrics['mainnet']['final_effective_circulating']/1e9:.1f}B")
             st.write(f"- **Total Burned**: {metrics['mainnet']['toplam_burned_token']/1e6:.1f}M NXID")
@@ -567,7 +567,7 @@ class AnalyticsManager:
             st.write(f"- **Analysis Duration**: {metrics['mainnet']['analiz_ay_sayisi']} months")
             st.write(f"- **Quarter Count**: {metrics['mainnet']['ceyrek_sayisi']} quarters")
             
-            # Enhanced circulating supply insight
+            #  circulating supply insight
             gross_vs_effective = (metrics['mainnet']['final_dolasim_arzi'] - metrics['mainnet']['final_effective_circulating']) / 1e9
             st.success(f"💡 **Real Impact**: {gross_vs_effective:.1f}B tokens removed from effective supply")
             
@@ -605,12 +605,12 @@ class AnalyticsManager:
             else:
                 st.warning(f"⚠️ Low burn impact: {burn_percentage:.2f}%")
             
-            # Enhanced burn impact analysis
+            #  burn impact analysis
             supply_reduction = total_burned / self.config.total_supply
             effective_supply = self.config.total_supply - total_burned
             
             st.info(f"""
-            🔥 **Enhanced Burn Impact :**
+            🔥 ** Burn Impact :**
             • Supply reduction: {supply_reduction:.2%}
             • Effective supply: {effective_supply/1e9:.1f}B NXID
             • Price impact: Deflationary pressure
@@ -618,12 +618,12 @@ class AnalyticsManager:
             """)
     
     def _display_vesting_analytics_v6(self, metrics: Dict):
-        """📅 Enhanced Vesting Analytics """
-        st.markdown("### 📅 Enhanced Token Release Analysis ")
+        """📅  Vesting Analytics """
+        st.markdown("### 📅  Token Release Analysis ")
         
         col1, col2 = st.columns(2)
         with col1:
-            st.markdown("#### 📅 Enhanced Vesting Timeline")
+            st.markdown("#### 📅  Vesting Timeline")
             st.write(f"- **Team Full Vested**: {metrics['vesting']['team_tam_vested_ay']} months")
             st.write(f"- **DAO Full Vested**: {metrics['vesting']['dao_tam_vested_ay']} months")
             st.write(f"- **Marketing Full Vested**: {metrics['vesting']['marketing_tam_vested_ay']} months")
@@ -632,7 +632,7 @@ class AnalyticsManager:
             st.write(f"- **Vesting Delay**: 6 months from launch")
             
         with col2:
-            st.markdown("#### 🔥 Enhanced Token Release Progress")
+            st.markdown("#### 🔥  Token Release Progress")
             st.write(f"- **24-Month Total Released**: {metrics['vesting']['yirmidort_ay_toplam_vested']/1e9:.1f}B NXID")
             st.write(f"- **24-Month Circulating**: {metrics['vesting']['yirmidort_ay_dolasim']/1e9:.1f}B NXID")
             st.write(f"- **Staking Pool Vesting**: ✅ Included")
@@ -640,14 +640,14 @@ class AnalyticsManager:
             circulating_24m_pct = (metrics['vesting']['yirmidort_ay_dolasim'] / self.config.total_supply) * 100
             
             if circulating_24m_pct < 60:
-                st.success("✅ Conservative enhanced release schedule")
+                st.success("✅ Conservative  release schedule")
             elif circulating_24m_pct < 80:
-                st.info("ℹ️ Moderate enhanced release speed")
+                st.info("ℹ️ Moderate  release speed")
             else:
-                st.warning("⚠️ Aggressive enhanced release schedule")
+                st.warning("⚠️ Aggressive  release schedule")
             
             st.info(f"""
-            📅 **Enhanced Vesting Features :**
+            📅 ** Vesting Features :**
             • Staking pools included in vesting analysis
             • Real circulating supply calculations
             • Burn effects on total supply
@@ -656,14 +656,14 @@ class AnalyticsManager:
             """)
     
     def display_export_section_v6(self, results: Dict):
-        """📁 Enhanced Export & Configuration Management """
+        """📁  Export & Configuration Management """
         st.markdown('''
         <h2 style="font-family: Orbitron, monospace; font-size: 2.2rem; font-weight: 700; 
                    color: #1B8EF2; margin: 2.5rem 0 1.5rem 0; padding: 1rem 0 0.5rem 0; 
                    border-bottom: 3px solid transparent; text-align: center;
                    border-image: linear-gradient(90deg, #1B8EF2, #3effc8) 1;
                    text-shadow: 0 0 20px rgba(27, 142, 242, 0.6);">
-            📁 Enhanced Export & Configuration Management 
+            📁  Export & Configuration Management 
         </h2>
         ''', unsafe_allow_html=True)
         
@@ -672,9 +672,9 @@ class AnalyticsManager:
         with col1:
             presale_csv = results['presale_df'].to_csv(index=False)
             st.download_button(
-                label="📥 Enhanced Presale ",
+                label="📥  Presale ",
                 data=presale_csv,
-                file_name=f"nxid_enhanced_presale_v6.csv",
+                file_name=f"nxid__presale_v6.csv",
                 mime="text/csv"
             )
         
@@ -682,9 +682,9 @@ class AnalyticsManager:
             if not results['weekly_token_df'].empty:
                 weekly_csv = results['weekly_token_df'].to_csv(index=False)
                 st.download_button(
-                    label="📥 Weekly Enhanced ",
+                    label="📥 Weekly  ",
                     data=weekly_csv,
-                    file_name=f"nxid_weekly_enhanced_v6.csv",
+                    file_name=f"nxid_weekly__v6.csv",
                     mime="text/csv"
                 )
         
@@ -693,16 +693,16 @@ class AnalyticsManager:
             st.download_button(
                 label=f"📥 {results['scenario'].upper()} ",
                 data=mainnet_csv,
-                file_name=f"nxid_enhanced_mainnet_{results['scenario']}_v6.csv",
+                file_name=f"nxid__mainnet_{results['scenario']}_v6.csv",
                 mime="text/csv"
             )
         
         with col4:
             vesting_csv = results['vesting_df'].to_csv(index=False)
             st.download_button(
-                label="📥 Enhanced Vesting ",
+                label="📥  Vesting ",
                 data=vesting_csv,
-                file_name="nxid_enhanced_vesting_v6.csv",
+                file_name="nxid__vesting_v6.csv",
                 mime="text/csv"
             )
         
@@ -711,7 +711,7 @@ class AnalyticsManager:
             st.download_button(
                 label="📥 Metrics ",
                 data=metrics_json,
-                file_name=f"nxid_enhanced_metrics_{results['scenario']}_v6.json",
+                file_name=f"nxid__metrics_{results['scenario']}_v6.json",
                 mime="application/json"
             )
         
@@ -720,12 +720,12 @@ class AnalyticsManager:
             st.download_button(
                 label="📥 Config ",
                 data=config_json,
-                file_name="nxid_enhanced_config_v6.json",
+                file_name="nxid__config_v6.json",
                 mime="application/json"
             )
     
     def calculate_performance_score_v6(self, metrics: Dict, scenario: str) -> float:
-        """🎯 Enhanced Performance Score """
+        """🎯  Performance Score """
         
         # Presale performance (20%)
         presale_score = (
@@ -813,19 +813,19 @@ class AnalyticsManager:
         return min(100, max(0, final_score))
     
     def display_final_performance_summary_v6(self, metrics: Dict, scenario: str):
-        """🎯 Enhanced Final Performance Summary """
+        """🎯  Final Performance Summary """
         st.markdown('''
         <h3 style="color: #1B8EF2; margin: 2rem 0 1rem 0; font-family: Orbitron;">
-            🎯 Enhanced Performance Score  - Advanced Maturity + Dynamic Systems
+            🎯  Performance Score  - Advanced Maturity + Dynamic Systems
         </h3>
         ''', unsafe_allow_html=True)
         
-        enhanced_score = self.calculate_performance_score_v6(metrics, scenario)
+        _score = self.calculate_performance_score_v6(metrics, scenario)
         scenario_color = NXID_COLORS['danger'] if scenario == 'bear' else (
             NXID_COLORS['success'] if scenario == 'bull' else NXID_COLORS['primary']
         )
         
-        # Enhanced final summary metrics
+        #  final summary metrics
         summary_col1, summary_col2, summary_col3, summary_col4 = st.columns(4)
         
         with summary_col1:
@@ -840,7 +840,7 @@ class AnalyticsManager:
         
         with summary_col2:
             st.markdown(f"""
-            **🚀 Enhanced Mainnet {scenario.upper()} Performance:**
+            **🚀  Mainnet {scenario.upper()} Performance:**
             - Starting McAp: ${metrics['mainnet']['starting_mcap']/1e6:.1f}M
             - Peak Price: ${metrics['mainnet']['max_tahmin_fiyat']:.4f}
             - Peak ROI: {metrics['mainnet']['presale_fiyat_artisi']:.1f}x
@@ -868,28 +868,28 @@ class AnalyticsManager:
             - Burn Effect: {(metrics['mainnet']['toplam_burned_token']/self.config.total_supply)*100:.2f}%
             """)
         
-        # Enhanced final assessment
-        if enhanced_score >= 95:
-            st.success(f"🏆 **PHENOMENAL  TOKENOMICS** - Score: {enhanced_score:.0f}/100 - {scenario.upper()} scenario perfectly optimized!")
-        elif enhanced_score >= 90:
-            st.success(f"🎉 **EXCELLENT  SYSTEM** - Score: {enhanced_score:.0f}/100 - Advanced features working brilliantly!")
-        elif enhanced_score >= 80:
-            st.info(f"✅ **GOOD  TOKENOMICS** - Score: {enhanced_score:.0f}/100 - Solid {scenario.upper()} + advanced foundations!")
-        elif enhanced_score >= 70:
-            st.warning(f"⚠️ **MODERATE  PERFORMANCE** - Score: {enhanced_score:.0f}/100 - {scenario.upper()} + maturity optimization needed")
+        #  final assessment
+        if _score >= 95:
+            st.success(f"🏆 **PHENOMENAL  TOKENOMICS** - Score: {_score:.0f}/100 - {scenario.upper()} scenario perfectly optimized!")
+        elif _score >= 90:
+            st.success(f"🎉 **EXCELLENT  SYSTEM** - Score: {_score:.0f}/100 - Advanced features working brilliantly!")
+        elif _score >= 80:
+            st.info(f"✅ **GOOD  TOKENOMICS** - Score: {_score:.0f}/100 - Solid {scenario.upper()} + advanced foundations!")
+        elif _score >= 70:
+            st.warning(f"⚠️ **MODERATE  PERFORMANCE** - Score: {_score:.0f}/100 - {scenario.upper()} + maturity optimization needed")
         else:
-            st.error(f"❌ ** NEEDS IMPROVEMENT** - Score: {enhanced_score:.0f}/100 - Review {scenario.upper()} + advanced parameters")
+            st.error(f"❌ ** NEEDS IMPROVEMENT** - Score: {_score:.0f}/100 - Review {scenario.upper()} + advanced parameters")
         
-        st.markdown(f"<p style='color: {scenario_color}; font-weight: bold; text-align: center; font-size: 1.3rem;'>🎯 Enhanced : Advanced Maturity + Dynamic Staking + Price Velocity + Real Supply - {scenario.upper()} scenario</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: {scenario_color}; font-weight: bold; text-align: center; font-size: 1.3rem;'>🎯  : Advanced Maturity + Dynamic Staking + Price Velocity + Real Supply - {scenario.upper()} scenario</p>", unsafe_allow_html=True)
         
-        # Enhanced system summary
+        #  system summary
         st.info("""
-        💡 **Enhanced NXID Tokenomics  Revolutionary Features:**
+        💡 ** NXID Tokenomics  Revolutionary Features:**
         • **Advanced Maturity Damping**: Market cap converges toward target automatically
         • **Price Velocity Staking**: Staking responds to price change speed (psychological realism)
         • **Real Circulating Supply**: Staked and burned tokens properly excluded from calculations
         • **Dynamic APY with Pool Release**: APY adjusts based on pool depletion, staking saturation, and market growth
-        • **Enhanced Simple Interest**: Transparent, predictable, no compounding complexity
+        • ** Simple Interest**: Transparent, predictable, no compounding complexity
         • **Separate McAp Visualization**: Dedicated chart for market cap analysis with maturity target
         """)
     

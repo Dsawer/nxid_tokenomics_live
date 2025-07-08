@@ -3,7 +3,7 @@ version: '3.8'
 services:
   nxid-tokenomics:
     build: .
-    container_name: nxid-enhanced-tokenomics
+    container_name: nxid--tokenomics
     ports:
       - "8501:8501"
     environment:
